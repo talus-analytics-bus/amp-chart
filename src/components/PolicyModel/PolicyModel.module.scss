@@ -1,0 +1,50 @@
+.main {
+  background: linear-gradient(#173244, white);
+  padding: 2rem;
+
+  h1 {
+    box-sizing: border-box;
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+  }
+
+  .tabrow {
+    display: flex;
+
+    button {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      padding: 1rem 2rem;
+    }
+
+    .location {
+      margin-left: auto;
+
+      label {
+        display: flex;
+        flex-direction: column;
+        color: white;
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  .tabarea {
+    padding: 1rem;
+    background-color: #bde7ff;
+    display: flex;
+    flex-direction: column;
+
+    .settingsBar {
+      display: flex;
+
+      label {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+      }
+    }
+  }
+}
