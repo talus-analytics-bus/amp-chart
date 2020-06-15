@@ -1,0 +1,78 @@
+import axios from 'axios';
+
+// Implement simple cache in localstorage for model runs
+// this version uses the state name as the key, that
+// key may need to be expanded in the future to include
+// interventions or other differences.
+
+// oldest acceptable model in the cache
+// (younger models will be used older will be deleted)
+const LIFESPAN = 60 * 60 * 24 * 1000;
+const API_URL = 'http://192.168.1.33:8000/state_base_model/';
+
+// request a model from the server
+// this should only happen if we
+// don't already have a recent model locally
+const requestModel = async (state) => {
+  console.log('requesting model ' + state);
+  const result = await axios(API_URL + state);
+
+  const runData = parseModelDates(result.data);
+  runData['dateRequested'] = new Date();
+
+  // cache this model in case it's quickly requested again
+  saveModel(runData);
+
+  return runData;
+};
+
+// take a model run string and
+// parse it, including fixing dates
+const parseModelDates = (runData) => {
+  runData.results.run = JSON.parse(runData.results[0].run).map((day) => ({
+    ...day,
+    date: new Date(day.date),
+  }));
+
+  return runData;
+};
+
+// save a model into local storage
+// saveModel expects a parsed model, not the string
+const saveModel = (runData) => {
+  const modelName =
+    'MR_' + runData.state + '_' + runData.dateRequested.toISOString();
+  console.log('saving model ' + modelName);
+  window.localStorage.setItem(modelName, JSON.stringify(runData));
+};
+
+// check if there is a sufficiently recent model run to use
+// if not, request a model from the server.
+const loadModel = (state) => {
+  console.log('loadModel ' + state);
+  const stateModelNames = Object.keys(localStorage).filter((key) =>
+    key.startsWith('MR_' + state)
+  );
+
+  const now = new Date();
+  const modelName = stateModelNames.find((modelName) => {
+    if (now - new Date(modelName.split('_').slice(-1)) < LIFESPAN) {
+      return true;
+    } else {
+      // clean up too-old models
+      console.log('deleting ' + modelName + ' from localStorage');
+      window.localStorage.removeItem(modelName);
+      return false;
+    }
+  });
+
+  if (modelName) {
+    console.log('retrieving ' + modelName + ' from localStorage');
+    const modelString = window.localStorage.getItem(modelName);
+    return parseModelDates(JSON.parse(modelString));
+  } else {
+    return requestModel(state);
+  }
+};
+
+export default loadModel;

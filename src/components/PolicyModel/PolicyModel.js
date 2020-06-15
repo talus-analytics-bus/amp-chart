@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+import loadModel from './LoadModel.js';
+
 // import PolicyPlot from '../PolicyPlot/PolicyPlot';
 import State from '../State/State';
 
@@ -17,35 +19,9 @@ const PolicyModel = () => {
   const [caseLoadAxis, setCaseLoadAxis] = useState([0, 100]);
   const [models, setModels] = useState();
 
-  const getModels = async () => {
-    // const date = new Date();
-    // const dateString = `${date.getFullYear()}-${
-    //   date.getMonth() + 1
-    // }-${date.getDate()}`;
-
-    // console.log(dateString);
-
-    selectedStates.forEach(async (state) => {
-      const result = await axios(
-        'http://192.168.1.33:8000/state_base_model/' + state
-      );
-      const runData = result.data;
-      runData.results.run = JSON.parse(runData.results[0].run);
-      runData.results.run.map((day) => ({
-        ...day,
-        date: 5,
-      }));
-
-      console.log(runData);
-      setModels({
-        ...models,
-        [state + runData.date]: runData,
-      });
-    });
-  };
-
   React.useEffect(() => {
-    getModels();
+    console.log(loadModel('CO'));
+    console.log(loadModel('CA'));
   }, []);
 
   return (
