@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 import loadModel from './LoadModel';
-import parseModelCurves from './parseModelCurves';
+import parseModels from './parseModels';
 
 // import PolicyPlot from '../PolicyPlot/PolicyPlot';
 import State from '../State/State';
@@ -14,25 +14,42 @@ import states from './states';
 const PolicyModel = () => {
   const [activeTab, setActiveTab] = useState('existing');
 
-  const [selectedStates, setSelectedStates] = useState(['CO', 'CA']);
   // use selected states to load the required models
+  const [selectedStates, setSelectedStates] = useState(['CO', 'CA']);
 
-  const [models, setModels] = useState();
-  // const curves = ['infected_b', 'infected_c'];
+  // curves selected by the user
+  const [selectedCurves, setSelectedCurves] = useState([
+    'infected_b',
+    'infected_c',
+    'dead',
+  ]);
+
+  const [curves, setCurves] = useState();
+  const [dateRange, setDateRange] = useState([0, 100]);
+  const [caseLoadAxis, setCaseLoadAxis] = useState([0, 100]);
 
   React.useEffect(() => {
     const loadedModels = {};
 
+    // request models from the cache manager
     selectedStates.forEach((state) => {
       loadedModels[state] = loadModel(state);
     });
 
-    const curves = parseModelCurves(loadedModels);
-    console.log(curves);
-  }, [selectedStates]);
+    // get curves, max, min from models
+    const modelCurves = parseModels(loadedModels);
+    setCurves(modelCurves);
 
-  const [dateRange, setDateRange] = useState([0, 100]);
-  const [caseLoadAxis, setCaseLoadAxis] = useState([0, 100]);
+    // set up axes
+    const dates = Object.values(modelCurves)
+      .map((state) => state.dateRange)
+      .flat();
+
+    setDateRange([
+      dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
+      dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
+    ]);
+  }, [selectedStates]);
 
   return (
     <article className={styles.main}>

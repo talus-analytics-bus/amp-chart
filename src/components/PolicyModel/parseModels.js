@@ -22,7 +22,7 @@ export default function parseModelCurves(models) {
   Object.entries(models).forEach(([state, model]) => {
     // create state
     curves[state] = {
-      dateRange: {},
+      dateRange: [],
       curves: {},
     };
 
@@ -59,8 +59,8 @@ export default function parseModelCurves(models) {
 
     // date range for the state
     const dates = model.results.run.map((day) => day.date);
-    curves[state].dateRange['min'] = dates.slice(0, 1)[0];
-    curves[state].dateRange['max'] = dates.slice(-1)[0];
+    curves[state].dateRange.push(dates.slice(0, 1)[0]);
+    curves[state].dateRange.push(dates.slice(-1)[0]);
   });
 
   return curves;
