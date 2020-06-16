@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import loadModel from './LoadModel.js';
+import loadModel from './LoadModel';
+import parseModelCurves from './parseModelCurves';
 
 // import PolicyPlot from '../PolicyPlot/PolicyPlot';
 import State from '../State/State';
@@ -13,16 +14,25 @@ import states from './states';
 const PolicyModel = () => {
   const [activeTab, setActiveTab] = useState('existing');
 
-  const [selectedStates, setSelectedStates] = useState(['CO']);
+  const [selectedStates, setSelectedStates] = useState(['CO', 'CA']);
+  // use selected states to load the required models
+
+  const [models, setModels] = useState();
+  // const curves = ['infected_b', 'infected_c'];
+
+  React.useEffect(() => {
+    const loadedModels = {};
+
+    selectedStates.forEach((state) => {
+      loadedModels[state] = loadModel(state);
+    });
+
+    const curves = parseModelCurves(loadedModels);
+    console.log(curves);
+  }, [selectedStates]);
 
   const [dateRange, setDateRange] = useState([0, 100]);
   const [caseLoadAxis, setCaseLoadAxis] = useState([0, 100]);
-  const [models, setModels] = useState();
-
-  React.useEffect(() => {
-    console.log(loadModel('CO'));
-    console.log(loadModel('CA'));
-  }, []);
 
   return (
     <article className={styles.main}>
