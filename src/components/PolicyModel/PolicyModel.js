@@ -21,6 +21,7 @@ const PolicyModel = () => {
   const [selectedCurves, setSelectedCurves] = useState([
     'infected_b',
     'infected_c',
+    'R effective',
     'dead',
   ]);
 
@@ -31,6 +32,8 @@ const PolicyModel = () => {
   React.useEffect(() => {
     const initialSetup = async () => {
       const loadedModels = await loadModels(selectedStates);
+
+      console.log(loadedModels);
 
       // get curves, max, min from models
       const modelCurves = parseModels(loadedModels, selectedCurves);
@@ -43,19 +46,29 @@ const PolicyModel = () => {
         .map((state) => state.dateRange)
         .flat();
 
-      console.log([
-        dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
-        dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
-      ]);
+      // console.log('Date Range: ', [
+      //   dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
+      //   dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
+      // ]);
 
       setDateRange([
         dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
         dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
       ]);
+
+      // console.log('Case Load Range: ', [
+      //   0,
+      //   Math.max(...Object.values(modelCurves).map((state) => state.yMax)),
+      // ]);
+
+      setCaseLoadAxis([
+        0,
+        Math.max(...Object.values(modelCurves).map((state) => state.yMax)),
+      ]);
     };
 
     initialSetup();
-  }, [selectedStates]);
+  }, [selectedStates, selectedCurves]);
 
   return (
     <article className={styles.main}>
