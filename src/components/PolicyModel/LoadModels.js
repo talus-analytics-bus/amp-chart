@@ -48,31 +48,37 @@ const saveModel = (runData) => {
 
 // check if there is a sufficiently recent model run to use
 // if not, request a model from the server.
-const loadModel = (state) => {
-  console.log('loadModel ' + state);
-  const stateModelNames = Object.keys(localStorage).filter((key) =>
-    key.startsWith('MR_' + state)
+const loadModels = async (states) => {
+  let models = await Promise.all(
+    states.map(async (state) => {
+      // console.log('loadModel ' + state);
+      const stateModelNames = Object.keys(localStorage).filter((key) =>
+        key.startsWith('MR_' + state)
+      );
+
+      const now = new Date();
+      const modelName = stateModelNames.find((modelName) => {
+        if (now - new Date(modelName.split('_').slice(-1)) < LIFESPAN) {
+          return true;
+        } else {
+          // clean up too-old models
+          console.log('deleting ' + modelName + ' from localStorage');
+          window.localStorage.removeItem(modelName);
+          return false;
+        }
+      });
+
+      if (modelName) {
+        console.log('retrieving ' + modelName + ' from localStorage');
+        const modelString = window.localStorage.getItem(modelName);
+        return parseModelDates(JSON.parse(modelString));
+      } else {
+        return requestModel(state);
+      }
+    })
   );
 
-  const now = new Date();
-  const modelName = stateModelNames.find((modelName) => {
-    if (now - new Date(modelName.split('_').slice(-1)) < LIFESPAN) {
-      return true;
-    } else {
-      // clean up too-old models
-      console.log('deleting ' + modelName + ' from localStorage');
-      window.localStorage.removeItem(modelName);
-      return false;
-    }
-  });
-
-  if (modelName) {
-    console.log('retrieving ' + modelName + ' from localStorage');
-    const modelString = window.localStorage.getItem(modelName);
-    return parseModelDates(JSON.parse(modelString));
-  } else {
-    return requestModel(state);
-  }
+  return models;
 };
 
-export default loadModel;
+export default loadModels;

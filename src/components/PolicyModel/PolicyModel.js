@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import loadModel from './LoadModel';
+import loadModels from './LoadModels';
 import parseModels from './parseModels';
 
 // import PolicyPlot from '../PolicyPlot/PolicyPlot';
@@ -25,30 +25,36 @@ const PolicyModel = () => {
   ]);
 
   const [curves, setCurves] = useState();
-  const [dateRange, setDateRange] = useState([0, 100]);
+  const [dateRange, setDateRange] = useState([]);
   const [caseLoadAxis, setCaseLoadAxis] = useState([0, 100]);
 
   React.useEffect(() => {
-    const loadedModels = {};
+    const initialSetup = async () => {
+      console.log('before await call loadmodels');
+      const loadedModels = await loadModels(selectedStates);
+      console.log('after await call loadmodels');
 
-    // request models from the cache manager
-    selectedStates.forEach((state) => {
-      loadedModels[state] = loadModel(state);
-    });
+      console.log(loadedModels);
 
-    // get curves, max, min from models
-    const modelCurves = parseModels(loadedModels);
-    setCurves(modelCurves);
+      // get curves, max, min from models
+      const modelCurves = parseModels(loadedModels);
+      // setCurves(modelCurves);
+      console.log(modelCurves);
 
-    // set up axes
-    const dates = Object.values(modelCurves)
-      .map((state) => state.dateRange)
-      .flat();
+      // set up axes
+      const dates = Object.values(modelCurves)
+        .map((state) => state.dateRange)
+        .flat();
 
-    setDateRange([
-      dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
-      dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
-    ]);
+      console.log(dates);
+
+      setDateRange([
+        dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
+        dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
+      ]);
+    };
+
+    initialSetup();
   }, [selectedStates]);
 
   return (
@@ -104,20 +110,20 @@ const PolicyModel = () => {
             </select>
           </label>
         </div>
-        <State
-          dateRange={dateRange}
-          setDateRange={setDateRange}
-          // dateOffset={0}
-          caseLoadAxis={caseLoadAxis}
-          selectedState={selectedStates[0]}
-        />
-        <State
-          dateRange={dateRange}
-          setDateRange={setDateRange}
-          // dateOffset={0}
-          caseLoadAxis={caseLoadAxis}
-          selectedState={'CA'}
-        />
+        {/* <State */}
+        {/*   dateRange={dateRange} */}
+        {/*   setDateRange={setDateRange} */}
+        {/*   // dateOffset={0} */}
+        {/*   caseLoadAxis={caseLoadAxis} */}
+        {/*   selectedState={selectedStates[0]} */}
+        {/* /> */}
+        {/* <State */}
+        {/*   dateRange={dateRange} */}
+        {/*   setDateRange={setDateRange} */}
+        {/*   // dateOffset={0} */}
+        {/*   caseLoadAxis={caseLoadAxis} */}
+        {/*   selectedState={'CA'} */}
+        {/* /> */}
       </section>
     </article>
   );
