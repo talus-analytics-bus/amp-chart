@@ -25,7 +25,7 @@ const PolicyModel = () => {
   ]);
 
   const [curves, setCurves] = useState();
-  const [dateRange, setDateRange] = useState([]);
+  const [dateRange, setDateRange] = useState([0, 100]);
   const [caseLoadAxis, setCaseLoadAxis] = useState([0, 100]);
 
   React.useEffect(() => {
@@ -33,16 +33,20 @@ const PolicyModel = () => {
       const loadedModels = await loadModels(selectedStates);
 
       // get curves, max, min from models
-      const modelCurves = parseModels(loadedModels);
-      // setCurves(modelCurves);
+      const modelCurves = parseModels(loadedModels, selectedCurves);
+
       console.log(modelCurves);
+      setCurves(modelCurves);
 
       // set up axes
       const dates = Object.values(modelCurves)
         .map((state) => state.dateRange)
         .flat();
 
-      console.log(dates);
+      console.log([
+        dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
+        dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
+      ]);
 
       setDateRange([
         dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
@@ -106,20 +110,20 @@ const PolicyModel = () => {
             </select>
           </label>
         </div>
-        {/* <State */}
-        {/*   dateRange={dateRange} */}
-        {/*   setDateRange={setDateRange} */}
-        {/*   // dateOffset={0} */}
-        {/*   caseLoadAxis={caseLoadAxis} */}
-        {/*   selectedState={selectedStates[0]} */}
-        {/* /> */}
-        {/* <State */}
-        {/*   dateRange={dateRange} */}
-        {/*   setDateRange={setDateRange} */}
-        {/*   // dateOffset={0} */}
-        {/*   caseLoadAxis={caseLoadAxis} */}
-        {/*   selectedState={'CA'} */}
-        {/* /> */}
+        <State
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          // dateOffset={0}
+          caseLoadAxis={caseLoadAxis}
+          selectedState={selectedStates[0]}
+        />
+        <State
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          // dateOffset={0}
+          caseLoadAxis={caseLoadAxis}
+          selectedState={'CA'}
+        />
       </section>
     </article>
   );

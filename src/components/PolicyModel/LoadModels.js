@@ -14,7 +14,7 @@ const API_URL = 'http://192.168.1.33:8000/state_base_model/';
 // this should only happen if we
 // don't already have a recent model locally
 const requestModel = async (state) => {
-  console.log('requesting model ' + state);
+  console.log('ModelCache: requesting model ' + state);
   const result = await axios(API_URL + state);
 
   const runData = parseModelDates(result.data);
@@ -42,7 +42,7 @@ const parseModelDates = (runData) => {
 const saveModel = (runData) => {
   const modelName =
     'MR_' + runData.state + '_' + runData.dateRequested.toISOString();
-  console.log('saving model ' + modelName);
+  console.log('ModelCache: saving model ' + modelName);
   window.localStorage.setItem(modelName, JSON.stringify(runData));
 };
 
@@ -51,7 +51,7 @@ const saveModel = (runData) => {
 const loadModels = async (states) => {
   let models = await Promise.all(
     states.map(async (state) => {
-      // console.log('loadModel ' + state);
+      // console.log('ModelCache: loadModel ' + state);
       const stateModelNames = Object.keys(localStorage).filter((key) =>
         key.startsWith('MR_' + state)
       );
@@ -62,14 +62,18 @@ const loadModels = async (states) => {
           return true;
         } else {
           // clean up too-old models
-          console.log('deleting ' + modelName + ' from localStorage');
+          console.log(
+            'ModelCache: deleting ' + modelName + ' from localStorage'
+          );
           window.localStorage.removeItem(modelName);
           return false;
         }
       });
 
       if (modelName) {
-        console.log('retrieving ' + modelName + ' from localStorage');
+        console.log(
+          'ModelCache: retrieving ' + modelName + ' from localStorage'
+        );
         const modelString = window.localStorage.getItem(modelName);
         return parseModelDates(JSON.parse(modelString));
       } else {

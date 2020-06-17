@@ -6,6 +6,7 @@
 // {
 //   'state': {
 //     dateRange: {min: min, max: max},
+//     yMax: 1235,
 //     curves: {
 //       'curve name': {
 //         yMax: 12345,
@@ -16,10 +17,8 @@
 //   },
 // }
 
-export default function parseModelCurves(models) {
+export default function parseModelCurves(models, selectedCurves) {
   const curves = {};
-
-  console.log(models);
 
   models.forEach((model) => {
     const state = model.state;
@@ -27,12 +26,13 @@ export default function parseModelCurves(models) {
     // create state object
     curves[state] = {
       dateRange: [],
+      yMax: 0,
       curves: {},
     };
 
     // create basic structure
     Object.keys(model.results.run[0]).forEach((column) => {
-      if (!['date', 'source'].includes(column)) {
+      if (selectedCurves.includes(column)) {
         curves[state].curves[column] = {};
         curves[state].curves[column]['actuals'] = [];
         curves[state].curves[column]['model'] = [];
@@ -44,7 +44,7 @@ export default function parseModelCurves(models) {
     // split out actuals and model run
     model.results.run.forEach((day) => {
       Object.entries(day).forEach(([column, value]) => {
-        if (!['date', 'source'].includes(column)) {
+        if (selectedCurves.includes(column)) {
           // splitting out sources to make plotting easier later
           const source = day.source === 'actuals' ? 'actuals' : 'model';
           curves[state].curves[column][source].push({
@@ -65,6 +65,12 @@ export default function parseModelCurves(models) {
     const dates = model.results.run.map((day) => day.date);
     curves[state].dateRange.push(dates.slice(0, 1)[0]);
     curves[state].dateRange.push(dates.slice(-1)[0]);
+
+    // yMax for the state
+    const peaks = Object.values(curves[state].curves).map(
+      (curve) => curve.yMax
+    );
+    curves[state].yMax = Math.max(...peaks);
   });
 
   return curves;
