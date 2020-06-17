@@ -15,11 +15,11 @@ const PolicyModel = () => {
   const [activeTab, setActiveTab] = useState('existing');
 
   // use selected states to load the required models
-  const [selectedStates, setSelectedStates] = useState(['CO', 'CA']);
+  const [selectedStates, setSelectedStates] = useState(['CA', 'CO']);
 
   // curves selected by the user
   const [selectedCurves, setSelectedCurves] = useState([
-    'infected_b',
+    // 'infected_b',
     'infected_c',
     'R effective',
     'dead',
@@ -123,20 +123,26 @@ const PolicyModel = () => {
             </select>
           </label>
         </div>
-        <State
-          dateRange={dateRange}
-          setDateRange={setDateRange}
-          // dateOffset={0}
-          caseLoadAxis={caseLoadAxis}
-          selectedState={selectedStates[0]}
-        />
-        <State
-          dateRange={dateRange}
-          setDateRange={setDateRange}
-          // dateOffset={0}
-          caseLoadAxis={caseLoadAxis}
-          selectedState={'CA'}
-        />
+        {curves && (
+          <State
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+            // dateOffset={0}
+            caseLoadAxis={caseLoadAxis}
+            selectedState={selectedStates[0]}
+            curves={curves[selectedStates[0]].curves}
+          />
+        )}
+        {curves && (
+          <State
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+            // dateOffset={0}
+            caseLoadAxis={caseLoadAxis}
+            selectedState={selectedStates[1]}
+            curves={curves[selectedStates[1]].curves}
+          />
+        )}
       </section>
     </article>
   );

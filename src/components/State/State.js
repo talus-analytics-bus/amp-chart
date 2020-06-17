@@ -47,6 +47,8 @@ const State = (props) => (
         selectedState={props.selectedState}
         dateRange={props.dateRange}
         setDateRange={props.setDateRange}
+        caseLoadAxis={props.caseLoadAxis}
+        curves={props.curves}
       />
     </div>
   </section>
