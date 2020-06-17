@@ -30,11 +30,7 @@ const PolicyModel = () => {
 
   React.useEffect(() => {
     const initialSetup = async () => {
-      console.log('before await call loadmodels');
       const loadedModels = await loadModels(selectedStates);
-      console.log('after await call loadmodels');
-
-      console.log(loadedModels);
 
       // get curves, max, min from models
       const modelCurves = parseModels(loadedModels);

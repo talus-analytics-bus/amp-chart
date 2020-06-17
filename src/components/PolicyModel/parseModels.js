@@ -19,8 +19,12 @@
 export default function parseModelCurves(models) {
   const curves = {};
 
-  Object.entries(models).forEach(([state, model]) => {
-    // create state
+  console.log(models);
+
+  models.forEach((model) => {
+    const state = model.state;
+
+    // create state object
     curves[state] = {
       dateRange: [],
       curves: {},
