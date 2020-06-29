@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 import loadModels from './LoadModels';
 import parseModels from './parseModels';
@@ -31,8 +30,14 @@ const PolicyModel = () => {
   const [domain, setDomain] = useState([0, 100]);
   const [caseLoadAxis, setCaseLoadAxis] = useState([0, 100]);
 
+  //   const ModelSetup = async () => {
+  //
+  //   }
+
   React.useEffect(() => {
+    console.log('useEffect called');
     const initialSetup = async () => {
+      console.log('InitialSetup called');
       const loadedModels = await loadModels(selectedStates);
 
       console.log(loadedModels);
@@ -82,7 +87,7 @@ const PolicyModel = () => {
   return (
     <div className={styles.background}>
       <article className={styles.main}>
-        <h1>COVID policy model</h1>
+        <h1>Social distancing model (info button)</h1>
         <div className={styles.tabrow}>
           <button
             onClick={() => setActiveTab('existing')}
@@ -134,7 +139,7 @@ const PolicyModel = () => {
               </select>
             </label>
           </div>
-          {curves && (
+          {curves && curves[selectedStates[0]] && (
             <State
               zoomDateRange={zoomDateRange}
               setZoomDateRange={setZoomDateRange}
@@ -145,17 +150,17 @@ const PolicyModel = () => {
               domain={domain}
             />
           )}
-          {curves && (
-            <State
-              zoomDateRange={zoomDateRange}
-              setZoomDateRange={setZoomDateRange}
-              // dateOffset={0}
-              caseLoadAxis={caseLoadAxis}
-              selectedState={selectedStates[1]}
-              curves={curves[selectedStates[1]]}
-              domain={domain}
-            />
-          )}
+          {/* {curves && ( */}
+          {/*   <State */}
+          {/*     zoomDateRange={zoomDateRange} */}
+          {/*     setZoomDateRange={setZoomDateRange} */}
+          {/*     // dateOffset={0} */}
+          {/*     caseLoadAxis={caseLoadAxis} */}
+          {/*     selectedState={selectedStates[1]} */}
+          {/*     curves={curves[selectedStates[1]]} */}
+          {/*     domain={domain} */}
+          {/*   /> */}
+          {/* )} */}
         </section>
       </article>
     </div>

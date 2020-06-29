@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   VictoryChart,
   VictoryZoomContainer,
   VictoryLine,
   VictoryArea,
   VictoryAxis,
-  VictoryScatter,
 } from 'victory';
 
 import NavigatorPlot from './NavigatorPlot/NavigatorPlot';

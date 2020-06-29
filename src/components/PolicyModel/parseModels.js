@@ -45,20 +45,33 @@ export default function parseModelCurves(models, selectedCurves) {
       }
     });
 
-    // temporary; only plot every fourth day
-    const trimmedData = model.results.run.filter((x, index) => index % 4 === 0);
+    const trimmedData = model.results.run;
 
     // split data into curves and maxiumus
     // split out actuals and model run
-    trimmedData.forEach((day) => {
+    trimmedData.forEach((day, index) => {
       Object.entries(day).forEach(([column, value]) => {
         if (selectedCurves.includes(column)) {
           // splitting out sources to make plotting easier later
           const source = day.source === 'actuals' ? 'actuals' : 'model';
-          curves[state].curves[column][source].push({
-            x: day.date,
-            y: value,
-          });
+          // skipping every fifth day of the model just to improve
+          // rendering performance, especially with multiple plots
+          if (source === 'model') {
+            if (
+              index % 5 === 0 ||
+              trimmedData[index - 1].source === 'actuals'
+            ) {
+              curves[state].curves[column][source].push({
+                x: day.date,
+                y: value,
+              });
+            }
+          } else {
+            curves[state].curves[column][source].push({
+              x: day.date,
+              y: value,
+            });
+          }
 
           // doing yMax as we go because we're already looping anyway
           curves[state].curves[column].yMax =
