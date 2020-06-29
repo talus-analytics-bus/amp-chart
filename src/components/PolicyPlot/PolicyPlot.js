@@ -2,9 +2,14 @@ import React from 'react';
 import {
   VictoryChart,
   VictoryZoomContainer,
+  // VictoryCursorContainer,
   VictoryLine,
   VictoryArea,
   VictoryAxis,
+  VictoryScatter,
+  VictoryTooltip,
+  createContainer,
+  LineSegment,
 } from 'victory';
 
 import NavigatorPlot from './NavigatorPlot/NavigatorPlot';
@@ -12,6 +17,8 @@ import NavigatorPlot from './NavigatorPlot/NavigatorPlot';
 import styles from './PolicyPlot.module.scss';
 
 const plotColors = ['#00a79d', '#00447c', '#7a4500', '#774573'];
+
+const VictoryZoomCursorContainer = createContainer('zoom', 'cursor');
 
 const PolicyModel = (props) => {
   // not resizing plots to match
@@ -25,7 +32,7 @@ const PolicyModel = (props) => {
   // const navigatorProportion = 0.2;
 
   // The actuals lines of the plot
-  const actualsLines = Object.entries(props.curves).map(
+  const actualsLines = Object.entries(props.data.curves).map(
     ([curveName, data], index) => {
       if (curveName !== 'R effective') {
         return (
@@ -47,7 +54,7 @@ const PolicyModel = (props) => {
   // WHY doesn't Victory let me return multiple lines from
   // the same map function? no reason that shouldn't work.
   // the model (dashed) lines of the plot
-  const modelLines = Object.entries(props.curves).map(
+  const modelLines = Object.entries(props.data.curves).map(
     ([curveName, data], index) => {
       if (curveName !== 'R effective') {
         return (
@@ -69,6 +76,56 @@ const PolicyModel = (props) => {
       }
     }
   );
+
+  const interventionLines = props.data.interventions.map((intervention) => (
+    <VictoryLine
+      key={intervention.name + intervention.intervention_start_date}
+      style={{ data: { stroke: 'firebrick', strokeWidth: 1 } }}
+      data={[
+        { x: Date.parse(intervention.intervention_start_date), y: 0 },
+        {
+          x: Date.parse(intervention.intervention_start_date),
+          y: props.caseLoadAxis[1],
+          // y: zoomDomain ? zoomDomain.y[1] * 1 : 80000,
+        },
+      ]}
+    />
+  ));
+
+  const interventionPoints = props.data.interventions.map((intervention) => (
+    // <VictoryPortal
+    // >
+    <VictoryScatter
+      key={intervention.name + intervention.intervention_start_date}
+      labelComponent={<VictoryTooltip />}
+      size={5.5}
+      style={{
+        data: { fill: 'firebrick', stroke: 'white', strokeWidth: 1 },
+      }}
+      //       events={[
+      //         {
+      //           choldName: 'all',
+      //           target: 'data',
+      //
+      //           eventHandlers: {
+      //             onMouseEnter: (event, eventKey) => {
+      //               console.log('mouseover ' + intervention.name + ' event key ');
+      //               console.log(event);
+      //               console.log(eventKey);
+      //             },
+      //           },
+      //         },
+      //       ]}
+      data={[
+        {
+          x: Date.parse(intervention.intervention_start_date),
+          y: props.caseLoadAxis[1] * 0.8,
+          label: intervention.name,
+        },
+      ]}
+    />
+    // {/* </VictoryPortal> */}
+  ));
 
   return (
     <section className={styles.main}>
@@ -132,19 +189,19 @@ const PolicyModel = (props) => {
             },
           }}
         />
-        {/* {console.log(props.curves)} */}
+        {/* {console.log(props.data.curves)} */}
         <VictoryArea
           style={{
             data: { stroke: 'grey', strokeWidth: 0.5, fill: 'url(#grad1)' },
           }}
-          data={props.curves['R effective'].actuals}
+          data={props.data.curves['R effective'].actuals}
           // interpolation={'monotoneX'}
         />
         <VictoryArea
           style={{
             data: { stroke: 'grey', strokeWidth: 0.5, fill: 'url(#grad2)' },
           }}
-          data={props.curves['R effective'].model}
+          data={props.data.curves['R effective'].model}
           // interpolation={'monotoneX'}
         />
         <VictoryLine
@@ -167,9 +224,12 @@ const PolicyModel = (props) => {
         scale={{ x: 'time' }}
         // style={{ height: chartProportion * 100 + '%' }}
         containerComponent={
-          <VictoryZoomContainer
+          <VictoryZoomCursorContainer
             className={styles.chart}
-            cursorLabel={({ datum }) => `${datum.x}`}
+            // cursorComponent={(props) =>
+            //   props.x > new Date() ? <LineSegment {...props} /> : false
+            // }
+            cursorLabel={({ datum }) => `add intervention`}
             // />
             // <VictoryZoomContainer
             allowZoom={false}
@@ -183,7 +243,7 @@ const PolicyModel = (props) => {
       >
         {/* <VictoryLine */}
         {/*   style={{ data: { stroke: 'orange' } }} */}
-        {/*   data={props.curves.infected.model} */}
+        {/*   data={props.data.curves.infected.model} */}
         {/* /> */}
         {/* <VictoryLine */}
         {/*   style={{ data: { stroke: 'skyblue' } }} */}
@@ -218,7 +278,6 @@ const PolicyModel = (props) => {
             },
           }}
         />
-        {/* {console.log(props.caseLoadAxis[1])} */}
         {/* Today marker */}
         <VictoryLine
           style={{ data: { stroke: 'skyblue', strokeWidth: 1 } }}
@@ -260,16 +319,18 @@ const PolicyModel = (props) => {
         {/* ))} */}
         {/* <VictoryLine */}
         {/*   style={{ data: { stroke: 'firebrick', strokeWidth: 1 } }} */}
-        {/*   data={props.curves.infected_b.actuals} */}
+        {/*   data={props.data.curves.infected_b.actuals} */}
         {/*   interpolation={'monotoneX'} */}
         {/* /> */}
 
         {actualsLines}
         {modelLines}
+        {interventionLines}
+        {interventionPoints}
       </VictoryChart>
 
       <NavigatorPlot
-        curves={props.curves}
+        curves={props.data.curves}
         zoomDateRange={props.zoomDateRange}
         setZoomDateRange={props.setZoomDateRange}
         domain={props.domain}

@@ -59,7 +59,7 @@ const State = (props) => {
           zoomDateRange={props.zoomDateRange}
           setZoomDateRange={props.setZoomDateRange}
           caseLoadAxis={props.caseLoadAxis}
-          curves={props.curves.curves}
+          data={props.curves}
           domain={props.domain}
         />
       </div>
