@@ -11,6 +11,8 @@ import NavigatorPlot from './NavigatorPlot/NavigatorPlot';
 
 import styles from './PolicyPlot.module.scss';
 
+const plotColors = ['#00a79d', '#00447c', '#7a4500', '#774573'];
+
 const PolicyModel = (props) => {
   // not resizing plots to match
   // window aspect ratio anymore
@@ -171,6 +173,7 @@ const PolicyModel = (props) => {
           }}
         />
         {/* {console.log(props.caseLoadAxis[1])} */}
+        {/* Today marker */}
         <VictoryLine
           style={{ data: { stroke: 'skyblue', strokeWidth: 1 } }}
           data={[
@@ -213,55 +216,55 @@ const PolicyModel = (props) => {
         {/*   data={props.curves.infected_b.actuals} */}
         {/*   interpolation={'monotoneX'} */}
         {/* /> */}
-        <VictoryLine
-          style={{ data: { stroke: 'pink', strokeWidth: 1 } }}
-          data={props.curves.infected_c.actuals}
-          interpolation={'monotoneX'}
-        />
-        <VictoryLine
-          style={{ data: { stroke: 'red', strokeWidth: 1 } }}
-          data={props.curves.dead.actuals}
-          interpolation={'monotoneX'}
-        />
-        {/* <VictoryLine */}
-        {/*   style={{ */}
-        {/*     data: { stroke: 'firebrick', strokeWidth: 1, strokeDasharray: 4 }, */}
-        {/*   }} */}
-        {/*   data={props.curves.infected_b.model} */}
-        {/*   interpolation={'monotoneX'} */}
-        {/* /> */}
-        <VictoryLine
-          style={{
-            data: { stroke: 'pink', strokeWidth: 1, strokeDasharray: 4 },
-          }}
-          data={props.curves.infected_c.model}
-          interpolation={'monotoneX'}
-        />
-        <VictoryLine
-          style={{
-            data: { stroke: 'red', strokeWidth: 1, strokeDasharray: 4 },
-          }}
-          data={props.curves.dead.model}
-          interpolation={'monotoneX'}
-        />
+
+        {Object.entries(props.curves).map(([curveName, data], index) => {
+          if (curveName !== 'R effective') {
+            return (
+              <VictoryLine
+                key={curveName}
+                style={{
+                  data: { stroke: plotColors[index], strokeWidth: 1 },
+                }}
+                data={data.actuals}
+                // interpolation={'monotoneX'}
+              />
+            );
+          } else {
+            return false;
+          }
+        })}
+
+        {/* WHY doesn't Victory let me return multiple lines from
+            the same map function? no reason that shouldn't work. */}
+        {Object.entries(props.curves).map(([curveName, data], index) => {
+          if (curveName !== 'R effective') {
+            return (
+              <VictoryLine
+                key={curveName}
+                style={{
+                  data: {
+                    stroke: plotColors[index],
+                    strokeWidth: 1,
+                    strokeDasharray: 4,
+                  },
+                }}
+                data={data.model}
+                interpolation={'monotoneX'}
+              />
+            );
+          } else {
+            return false;
+          }
+        })}
       </VictoryChart>
-      {/* </div> */}
-      {/* <div className={styles.navigator}> */}
+
       <NavigatorPlot
         data={props.curves.infected_c}
-        // proportion={navigatorProportion}
-        // selectedDomain={selectedDomain}
-
         zoomDateRange={props.zoomDateRange}
         setZoomDateRange={props.setZoomDateRange}
-        // dateRange={props.dateRange}
-        // zoomDomain={zoomDomain}
-        // setZoomDomain={setZoomDomain}
         domain={props.domain}
         caseLoadAxis={props.caseLoadAxis}
       />
-
-      {/* </div> */}
     </section>
   );
 };

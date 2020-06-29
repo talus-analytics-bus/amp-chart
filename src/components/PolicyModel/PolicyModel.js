@@ -14,12 +14,12 @@ const PolicyModel = () => {
   const [activeTab, setActiveTab] = useState('existing');
 
   // use selected states to load the required models
-  const [selectedStates, setSelectedStates] = useState(['CA', 'CO']);
+  const [selectedStates, setSelectedStates] = useState(['CO']);
 
   // curves selected by the user
   const [selectedCurves, setSelectedCurves] = useState([
     // 'infected_a',
-    // 'infected_b',
+    'infected_b',
     'infected_c',
     'R effective',
     'dead',
@@ -35,9 +35,7 @@ const PolicyModel = () => {
   //   }
 
   React.useEffect(() => {
-    console.log('useEffect called');
     const initialSetup = async () => {
-      console.log('InitialSetup called');
       const loadedModels = await loadModels(selectedStates);
 
       console.log(loadedModels);
