@@ -29,7 +29,7 @@ export default function parseModelCurves(models, selectedCurves) {
       dateRange: [],
       yMax: 0,
       curves: {},
-      interventions: [],
+      interventions: model.interventions,
       deaths: model.deaths,
       cases: model.cases,
       date: model.date,

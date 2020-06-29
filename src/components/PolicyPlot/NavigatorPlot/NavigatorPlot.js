@@ -10,7 +10,55 @@ import {
 import CustomBrush from '../CustomBrush/CustomBrush';
 import styles from './NavigatorPlot.module.scss';
 
+const plotColors = ['#49615F99', '#394C5B99', '#4D3F2D99', '#4B384A99'];
+
 const NavigatorPlot = (props) => {
+  // The actuals lines of the plot
+  const actualsLines = Object.entries(props.curves).map(
+    ([curveName, data], index) => {
+      if (curveName !== 'R effective') {
+        return (
+          <VictoryLine
+            key={curveName}
+            style={{
+              data: { stroke: plotColors[index], strokeWidth: 1 },
+            }}
+            data={data.actuals}
+            // interpolation={'monotoneX'}
+          />
+        );
+      } else {
+        return false;
+      }
+    }
+  );
+
+  // WHY doesn't Victory let me return multiple lines from
+  // the same map function? no reason that shouldn't work.
+  // the model (dashed) lines of the plot
+  const modelLines = Object.entries(props.curves).map(
+    ([curveName, data], index) => {
+      if (curveName !== 'R effective') {
+        return (
+          <VictoryLine
+            key={curveName}
+            style={{
+              data: {
+                stroke: plotColors[index],
+                strokeWidth: 1,
+                strokeDasharray: 4,
+              },
+            }}
+            data={data.model}
+            interpolation={'monotoneX'}
+          />
+        );
+      } else {
+        return false;
+      }
+    }
+  );
+
   return (
     <VictoryChart
       className={styles.navigator}
@@ -35,10 +83,9 @@ const NavigatorPlot = (props) => {
         />
       }
     >
-      {}
       <VictoryAxis
-        tickValues={props.data.actuals
-          .concat(props.data.model)
+        tickValues={props.curves.infected_c.actuals
+          .concat(props.curves.infected_c.model)
           .map((day) => day.x)
           .filter((date, index) => index % 30 === 0)}
         tickFormat={(x) =>
@@ -52,18 +99,10 @@ const NavigatorPlot = (props) => {
           },
         }}
       />
-      <VictoryLine
-        style={{
-          data: { stroke: 'grey', strokeWidth: 1 },
-        }}
-        data={props.data.actuals}
-      />
-      <VictoryLine
-        style={{
-          data: { stroke: 'grey', strokeWidth: 1, strokeDasharray: 4 },
-        }}
-        data={props.data.model}
-      />
+
+      {actualsLines}
+      {modelLines}
+
       <VictoryArea
         style={{
           data: { fill: 'gray', opacity: 0.25 },

@@ -24,6 +24,52 @@ const PolicyModel = (props) => {
   // const chartProportion = 0.6;
   // const navigatorProportion = 0.2;
 
+  // The actuals lines of the plot
+  const actualsLines = Object.entries(props.curves).map(
+    ([curveName, data], index) => {
+      if (curveName !== 'R effective') {
+        return (
+          <VictoryLine
+            key={curveName}
+            style={{
+              data: { stroke: plotColors[index], strokeWidth: 1 },
+            }}
+            data={data.actuals}
+            // interpolation={'monotoneX'}
+          />
+        );
+      } else {
+        return false;
+      }
+    }
+  );
+
+  // WHY doesn't Victory let me return multiple lines from
+  // the same map function? no reason that shouldn't work.
+  // the model (dashed) lines of the plot
+  const modelLines = Object.entries(props.curves).map(
+    ([curveName, data], index) => {
+      if (curveName !== 'R effective') {
+        return (
+          <VictoryLine
+            key={curveName}
+            style={{
+              data: {
+                stroke: plotColors[index],
+                strokeWidth: 1,
+                strokeDasharray: 4,
+              },
+            }}
+            data={data.model}
+            interpolation={'monotoneX'}
+          />
+        );
+      } else {
+        return false;
+      }
+    }
+  );
+
   return (
     <section className={styles.main}>
       <svg style={{ height: 0 }}>
@@ -181,6 +227,7 @@ const PolicyModel = (props) => {
             { x: new Date(), y: props.caseLoadAxis[1] },
           ]}
         />
+
         {/* policy lines and dots */}
         {/* {policies.map((policyDate) => ( */}
         {/*   <VictoryLine */}
@@ -217,49 +264,12 @@ const PolicyModel = (props) => {
         {/*   interpolation={'monotoneX'} */}
         {/* /> */}
 
-        {Object.entries(props.curves).map(([curveName, data], index) => {
-          if (curveName !== 'R effective') {
-            return (
-              <VictoryLine
-                key={curveName}
-                style={{
-                  data: { stroke: plotColors[index], strokeWidth: 1 },
-                }}
-                data={data.actuals}
-                // interpolation={'monotoneX'}
-              />
-            );
-          } else {
-            return false;
-          }
-        })}
-
-        {/* WHY doesn't Victory let me return multiple lines from
-            the same map function? no reason that shouldn't work. */}
-        {Object.entries(props.curves).map(([curveName, data], index) => {
-          if (curveName !== 'R effective') {
-            return (
-              <VictoryLine
-                key={curveName}
-                style={{
-                  data: {
-                    stroke: plotColors[index],
-                    strokeWidth: 1,
-                    strokeDasharray: 4,
-                  },
-                }}
-                data={data.model}
-                interpolation={'monotoneX'}
-              />
-            );
-          } else {
-            return false;
-          }
-        })}
+        {actualsLines}
+        {modelLines}
       </VictoryChart>
 
       <NavigatorPlot
-        data={props.curves.infected_c}
+        curves={props.curves}
         zoomDateRange={props.zoomDateRange}
         setZoomDateRange={props.setZoomDateRange}
         domain={props.domain}
