@@ -7,7 +7,7 @@ import {
   VictoryArea,
   VictoryAxis,
   VictoryScatter,
-  VictoryTooltip,
+  VictoryLabel,
   createContainer,
   LineSegment,
 } from 'victory'
@@ -95,25 +95,25 @@ const PolicyModel = props => {
   const interventionPoints = props.data.interventions.map(intervention => (
     <VictoryScatter
       key={intervention.name + intervention.intervention_start_date}
-      labelComponent={<VictoryTooltip />}
+      labelComponent={<VictoryLabel style={{ display: 'none' }} />}
       size={5.5}
       style={{
         data: { fill: 'firebrick', stroke: 'white', strokeWidth: 1 },
       }}
-      //       events={[
-      //         {
-      //           childName: 'all',
-      //           target: 'data',
-      //
-      //           eventHandlers: {
-      //             onMouseEnter: (event, eventKey) => {
-      //               console.log('mouseover ' + intervention.name + ' event key ');
-      //               console.log(event);
-      //               console.log(eventKey);
-      //             },
-      //           },
-      //         },
-      //       ]}
+      events={[
+        {
+          childName: 'all',
+          target: 'data',
+
+          eventHandlers: {
+            onMouseEnter: (event, eventKey) => {
+              console.log('mouseover ' + intervention.name + ' event key ')
+              console.log(event)
+              console.log(eventKey)
+            },
+          },
+        },
+      ]}
       data={[
         {
           x: Date.parse(intervention.intervention_start_date),
@@ -216,8 +216,11 @@ const PolicyModel = props => {
           {
             target: 'parent',
             eventHandlers: {
-              onClick: event => {
-                alert('Add Intervention')
+              onClick: (event, eventKey) => {
+                const today = new Date()
+                if (eventKey.cursorValue.x > today) {
+                  alert('Add intervention')
+                }
               },
             },
           },
