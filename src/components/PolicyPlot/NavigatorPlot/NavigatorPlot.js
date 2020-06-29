@@ -69,8 +69,8 @@ const NavigatorPlot = (props) => {
           data: { fill: 'gray', opacity: 0.25 },
         }}
         data={[
-          { x: props.domain[0], y: 100000 },
-          { x: props.zoomDateRange[0], y: 100000 },
+          { x: props.domain[0], y: props.caseLoadAxis[1] },
+          { x: props.zoomDateRange[0], y: props.caseLoadAxis[1] },
         ]}
       />
       <VictoryArea
@@ -78,8 +78,8 @@ const NavigatorPlot = (props) => {
           data: { fill: 'gray', opacity: 0.25 },
         }}
         data={[
-          { x: props.domain[1], y: 100000 },
-          { x: props.zoomDateRange[1], y: 100000 },
+          { x: props.domain[1], y: props.caseLoadAxis[1] },
+          { x: props.zoomDateRange[1], y: props.caseLoadAxis[1] },
         ]}
       />
       {
@@ -90,7 +90,7 @@ const NavigatorPlot = (props) => {
             style={{ data: { stroke: 'skyblue', strokeWidth: 1 } }}
             data={[
               { x: new Date(), y: 0 },
-              { x: new Date(), y: 100000 },
+              { x: new Date(), y: props.caseLoadAxis[1] },
             ]}
           />
         )

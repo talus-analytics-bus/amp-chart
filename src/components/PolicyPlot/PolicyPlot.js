@@ -258,6 +258,7 @@ const PolicyModel = (props) => {
         // zoomDomain={zoomDomain}
         // setZoomDomain={setZoomDomain}
         domain={props.domain}
+        caseLoadAxis={props.caseLoadAxis}
       />
 
       {/* </div> */}
