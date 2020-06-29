@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   VictoryChart,
   VictoryZoomContainer,
@@ -10,17 +10,18 @@ import {
   VictoryTooltip,
   createContainer,
   LineSegment,
-} from 'victory';
+} from 'victory'
 
-import NavigatorPlot from './NavigatorPlot/NavigatorPlot';
+import NavigatorPlot from './NavigatorPlot/NavigatorPlot'
+import AddInterventionCursor from './AddInterventionCursor/AddInterventionCursor'
 
-import styles from './PolicyPlot.module.scss';
+import styles from './PolicyPlot.module.scss'
 
-const plotColors = ['#00a79d', '#00447c', '#7a4500', '#774573'];
+const plotColors = ['#00a79d', '#00447c', '#7a4500', '#774573']
 
-const VictoryZoomCursorContainer = createContainer('zoom', 'cursor');
+const VictoryZoomCursorContainer = createContainer('zoom', 'cursor')
 
-const PolicyModel = (props) => {
+const PolicyModel = props => {
   // not resizing plots to match
   // window aspect ratio anymore
   // just setting the main witdth to
@@ -44,12 +45,12 @@ const PolicyModel = (props) => {
             data={data.actuals}
             // interpolation={'monotoneX'}
           />
-        );
+        )
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
   // WHY doesn't Victory let me return multiple lines from
   // the same map function? no reason that shouldn't work.
@@ -70,14 +71,14 @@ const PolicyModel = (props) => {
             data={data.model}
             interpolation={'monotoneX'}
           />
-        );
+        )
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
-  const interventionLines = props.data.interventions.map((intervention) => (
+  const interventionLines = props.data.interventions.map(intervention => (
     <VictoryLine
       key={intervention.name + intervention.intervention_start_date}
       style={{ data: { stroke: 'firebrick', strokeWidth: 1 } }}
@@ -90,9 +91,9 @@ const PolicyModel = (props) => {
         },
       ]}
     />
-  ));
+  ))
 
-  const interventionPoints = props.data.interventions.map((intervention) => (
+  const interventionPoints = props.data.interventions.map(intervention => (
     // <VictoryPortal
     // >
     <VictoryScatter
@@ -125,7 +126,7 @@ const PolicyModel = (props) => {
       ]}
     />
     // {/* </VictoryPortal> */}
-  ));
+  ))
 
   return (
     <section className={styles.main}>
@@ -165,8 +166,8 @@ const PolicyModel = (props) => {
             allowZoom={false}
             zoomDimension="x"
             zoomDomain={{ x: props.zoomDateRange }}
-            onZoomDomainChange={(domain) => {
-              props.setZoomDateRange(domain.x);
+            onZoomDomainChange={domain => {
+              props.setZoomDateRange(domain.x)
             }}
           />
         }
@@ -226,17 +227,16 @@ const PolicyModel = (props) => {
         containerComponent={
           <VictoryZoomCursorContainer
             className={styles.chart}
-            // cursorComponent={(props) =>
-            //   props.x > new Date() ? <LineSegment {...props} /> : false
-            // }
+            cursorLabelComponent={<AddInterventionCursor />}
+            cursorComponent={<LineSegment style={{ display: 'none' }} />}
             cursorLabel={({ datum }) => `add intervention`}
             // />
             // <VictoryZoomContainer
             allowZoom={false}
             zoomDimension="x"
             zoomDomain={{ x: props.zoomDateRange }}
-            onZoomDomainChange={(domain) => {
-              props.setZoomDateRange(domain.x);
+            onZoomDomainChange={domain => {
+              props.setZoomDateRange(domain.x)
             }}
           />
         }
@@ -252,7 +252,7 @@ const PolicyModel = (props) => {
 
         <VictoryAxis
           dependentAxis
-          tickFormat={(tick) => tick / 1000 + 'K'}
+          tickFormat={tick => tick / 1000 + 'K'}
           style={{
             grid: {
               stroke: '#aaaaaa',
@@ -337,7 +337,7 @@ const PolicyModel = (props) => {
         caseLoadAxis={props.caseLoadAxis}
       />
     </section>
-  );
-};
+  )
+}
 
-export default PolicyModel;
+export default PolicyModel
