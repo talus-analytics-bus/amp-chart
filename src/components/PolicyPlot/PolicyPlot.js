@@ -105,7 +105,7 @@ const PolicyModel = props => {
       }}
       //       events={[
       //         {
-      //           choldName: 'all',
+      //           childName: 'all',
       //           target: 'data',
       //
       //           eventHandlers: {
@@ -219,11 +219,21 @@ const PolicyModel = props => {
         responsive={true}
         width={500}
         height={300}
+        events={[
+          {
+            target: 'parent',
+            eventHandlers: {
+              onClick: event => {
+                alert('Add Intervention')
+              },
+            },
+          },
+        ]}
         // height={
         // (window.innerHeight / window.innerWidth) * 500 * chartProportion
         // }
-        scale={{ x: 'time' }}
         // style={{ height: chartProportion * 100 + '%' }}
+        scale={{ x: 'time' }}
         containerComponent={
           <VictoryZoomCursorContainer
             className={styles.chart}
@@ -241,15 +251,6 @@ const PolicyModel = props => {
           />
         }
       >
-        {/* <VictoryLine */}
-        {/*   style={{ data: { stroke: 'orange' } }} */}
-        {/*   data={props.data.curves.infected.model} */}
-        {/* /> */}
-        {/* <VictoryLine */}
-        {/*   style={{ data: { stroke: 'skyblue' } }} */}
-        {/*   data={exposed} */}
-        {/* /> */}
-
         <VictoryAxis
           dependentAxis
           tickFormat={tick => tick / 1000 + 'K'}
@@ -286,42 +287,6 @@ const PolicyModel = props => {
             { x: new Date(), y: props.caseLoadAxis[1] },
           ]}
         />
-
-        {/* policy lines and dots */}
-        {/* {policies.map((policyDate) => ( */}
-        {/*   <VictoryLine */}
-        {/*     key={policyDate} */}
-        {/*     style={{ data: { stroke: 'firebrick', strokeWidth: 1 } }} */}
-        {/*     data={[ */}
-        {/*       { x: policyDate, y: 0 }, */}
-        {/*       { */}
-        {/*         x: policyDate, */}
-        {/*         y: 60000, */}
-        {/*         // y: zoomDomain ? zoomDomain.y[1] * 1 : 80000, */}
-        {/*       }, */}
-        {/*     ]} */}
-        {/*   /> */}
-        {/* ))} */}
-        {/* {policies.map((policyDate) => ( */}
-        {/*   <VictoryScatter */}
-        {/*     key={policyDate} */}
-        {/*     style={{ */}
-        {/*       data: { fill: 'firebrick', stroke: 'white', strokeWidth: 1 }, */}
-        {/*     }} */}
-        {/*     data={[ */}
-        {/*       { */}
-        {/*         x: policyDate, */}
-        {/*         y: 60000, */}
-        {/*         // y: zoomDomain ? zoomDomain.y[1] * 0.8 : 60000, */}
-        {/*       }, */}
-        {/*     ]} */}
-        {/*   /> */}
-        {/* ))} */}
-        {/* <VictoryLine */}
-        {/*   style={{ data: { stroke: 'firebrick', strokeWidth: 1 } }} */}
-        {/*   data={props.data.curves.infected_b.actuals} */}
-        {/*   interpolation={'monotoneX'} */}
-        {/* /> */}
 
         {actualsLines}
         {modelLines}

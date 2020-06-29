@@ -66,7 +66,7 @@ const AddInterventionCursor = props => {
             />
             <text
               x="160"
-              y="30"
+              y="32"
               textAnchor="end"
               className={styles.st6 + ' ' + styles.st7 + ' ' + styles.st8}
             >
@@ -74,7 +74,7 @@ const AddInterventionCursor = props => {
             </text>
             <text
               x="160"
-              y="60"
+              y="58"
               textAnchor="end"
               className={styles.st3 + ' ' + styles.st4 + ' ' + styles.st5}
             >
