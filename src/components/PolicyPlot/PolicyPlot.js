@@ -87,15 +87,12 @@ const PolicyModel = props => {
         {
           x: Date.parse(intervention.intervention_start_date),
           y: props.caseLoadAxis[1],
-          // y: zoomDomain ? zoomDomain.y[1] * 1 : 80000,
         },
       ]}
     />
   ))
 
   const interventionPoints = props.data.interventions.map(intervention => (
-    // <VictoryPortal
-    // >
     <VictoryScatter
       key={intervention.name + intervention.intervention_start_date}
       labelComponent={<VictoryTooltip />}
@@ -125,7 +122,6 @@ const PolicyModel = props => {
         },
       ]}
     />
-    // {/* </VictoryPortal> */}
   ))
 
   return (
@@ -190,20 +186,17 @@ const PolicyModel = props => {
             },
           }}
         />
-        {/* {console.log(props.data.curves)} */}
         <VictoryArea
           style={{
             data: { stroke: 'grey', strokeWidth: 0.5, fill: 'url(#grad1)' },
           }}
           data={props.data.curves['R effective'].actuals}
-          // interpolation={'monotoneX'}
         />
         <VictoryArea
           style={{
             data: { stroke: 'grey', strokeWidth: 0.5, fill: 'url(#grad2)' },
           }}
           data={props.data.curves['R effective'].model}
-          // interpolation={'monotoneX'}
         />
         <VictoryLine
           style={{ data: { stroke: 'skyblue', strokeWidth: 1 } }}
@@ -243,6 +236,10 @@ const PolicyModel = props => {
             // />
             // <VictoryZoomContainer
             allowZoom={false}
+            // If we want to re-enable panning, there will
+            // need to be better event handling to separate
+            // clicking and panning gestures for adding interventions.
+            allowPan={false}
             zoomDimension="x"
             zoomDomain={{ x: props.zoomDateRange }}
             onZoomDomainChange={domain => {
