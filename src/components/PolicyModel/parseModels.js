@@ -22,12 +22,17 @@ export default function parseModelCurves(models, selectedCurves) {
 
   models.forEach((model) => {
     const state = model.state;
+    console.log(state);
 
     // create state object
     curves[state] = {
       dateRange: [],
       yMax: 0,
       curves: {},
+      interventions: [],
+      deaths: model.deaths,
+      cases: model.cases,
+      date: model.date,
     };
 
     // create basic structure
@@ -40,9 +45,12 @@ export default function parseModelCurves(models, selectedCurves) {
       }
     });
 
+    // temporary; only plot every fourth day
+    const trimmedData = model.results.run.filter((x, index) => index % 4 === 0);
+
     // split data into curves and maxiumus
     // split out actuals and model run
-    model.results.run.forEach((day) => {
+    trimmedData.forEach((day) => {
       Object.entries(day).forEach(([column, value]) => {
         if (selectedCurves.includes(column)) {
           // splitting out sources to make plotting easier later
@@ -67,8 +75,10 @@ export default function parseModelCurves(models, selectedCurves) {
     curves[state].dateRange.push(dates.slice(-1)[0]);
 
     // yMax for the state
-    const peaks = Object.values(curves[state].curves).map(
-      (curve) => curve.yMax
+    const peaks = Object.entries(curves[state].curves).map(
+      ([curve, points]) =>
+        // selectedCurves.includes(curve) ? points.yMax : 0
+        points.yMax
     );
     curves[state].yMax = Math.max(...peaks);
   });

@@ -18,8 +18,8 @@ const CustomBrush = (props) => {
   const start = props.x;
   const end = props.x + props.width;
 
-  const top = props.y + 3;
-  const height = props.height - 3;
+  const top = props.y + 6;
+  const height = props.height - 6;
 
   return (
     <g>

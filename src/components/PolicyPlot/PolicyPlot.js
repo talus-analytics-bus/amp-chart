@@ -13,15 +13,31 @@ import NavigatorPlot from './NavigatorPlot/NavigatorPlot';
 import styles from './PolicyPlot.module.scss';
 
 const PolicyModel = (props) => {
-  const percentProportion = 0.15;
-  const chartProportion = 0.6;
-  const navigatorProportion = 0.2;
+  // not resizing plots to match
+  // window aspect ratio anymore
+  // just setting the main witdth to
+  // the width of the rest of the amp
+  // site now.
+
+  // const percentProportion = 0.15;
+  // const chartProportion = 0.6;
+  // const navigatorProportion = 0.2;
 
   return (
     <section className={styles.main}>
-      <svg>
+      <svg style={{ height: 0 }}>
         <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style={{ stopColor: '#00447c', stopOpacity: 1 }} />
+          <stop
+            offset="100%"
+            style={{ stopColor: '#00447c', stopOpacity: 0 }}
+          />
+        </linearGradient>
+        <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop
+            offset="0%"
+            style={{ stopColor: '#00447c', stopOpacity: 0.5 }}
+          />
           <stop
             offset="100%"
             style={{ stopColor: '#00447c', stopOpacity: 0 }}
@@ -33,19 +49,20 @@ const PolicyModel = (props) => {
         domainPadding={10}
         responsive={true}
         width={500}
-        height={
-          (window.innerHeight / window.innerWidth) * 500 * percentProportion
-        }
+        height={80}
+        // height={
+        //   (window.innerHeight / window.innerWidth) * 500 * percentProportion
+        // }
         scale={{ x: 'time' }}
-        style={{ height: percentProportion * 100 + '%' }}
+        // style={{ height: percentProportion * 100 + '%' }}
         containerComponent={
           <VictoryZoomContainer
             className={styles.pct}
             allowZoom={false}
             zoomDimension="x"
-            zoomDomain={{ x: props.dateRange }}
+            zoomDomain={{ x: props.zoomDateRange }}
             onZoomDomainChange={(domain) => {
-              props.setDateRange(domain.x);
+              props.setZoomDateRange(domain.x);
             }}
           />
         }
@@ -76,17 +93,32 @@ const PolicyModel = (props) => {
           data={props.curves['R effective'].actuals}
           // interpolation={'monotoneX'}
         />
+        <VictoryArea
+          style={{
+            data: { stroke: 'grey', strokeWidth: 0.5, fill: 'url(#grad2)' },
+          }}
+          data={props.curves['R effective'].model}
+          // interpolation={'monotoneX'}
+        />
+        <VictoryLine
+          style={{ data: { stroke: 'skyblue', strokeWidth: 1 } }}
+          data={[
+            { x: new Date(), y: 0 },
+            { x: new Date(), y: 3 },
+          ]}
+        />
       </VictoryChart>
       <VictoryChart
         padding={{ top: 0, bottom: 15, left: 30, right: 10 }}
         domainPadding={10}
         responsive={true}
         width={500}
-        height={
-          (window.innerHeight / window.innerWidth) * 500 * chartProportion
-        }
+        height={300}
+        // height={
+        // (window.innerHeight / window.innerWidth) * 500 * chartProportion
+        // }
         scale={{ x: 'time' }}
-        style={{ height: chartProportion * 100 + '%' }}
+        // style={{ height: chartProportion * 100 + '%' }}
         containerComponent={
           <VictoryZoomContainer
             className={styles.chart}
@@ -95,17 +127,16 @@ const PolicyModel = (props) => {
             // <VictoryZoomContainer
             allowZoom={false}
             zoomDimension="x"
-            zoomDomain={{ x: props.dateRange }}
+            zoomDomain={{ x: props.zoomDateRange }}
             onZoomDomainChange={(domain) => {
-              props.setDateRange(domain.x);
+              props.setZoomDateRange(domain.x);
             }}
           />
         }
       >
-        {/* {console.log(zoomDomain)} */}
         {/* <VictoryLine */}
         {/*   style={{ data: { stroke: 'orange' } }} */}
-        {/*   data={infected_a} */}
+        {/*   data={props.curves.infected.model} */}
         {/* /> */}
         {/* <VictoryLine */}
         {/*   style={{ data: { stroke: 'skyblue' } }} */}
@@ -218,14 +249,16 @@ const PolicyModel = (props) => {
       {/* </div> */}
       {/* <div className={styles.navigator}> */}
       <NavigatorPlot
-        data={props.curves.infected_c.actuals}
-        proportion={navigatorProportion}
+        data={props.curves.infected_c}
+        // proportion={navigatorProportion}
         // selectedDomain={selectedDomain}
 
-        dateRange={props.dateRange}
-        setDateRange={props.setDateRange}
+        zoomDateRange={props.zoomDateRange}
+        setZoomDateRange={props.setZoomDateRange}
+        // dateRange={props.dateRange}
         // zoomDomain={zoomDomain}
         // setZoomDomain={setZoomDomain}
+        domain={props.domain}
       />
 
       {/* </div> */}
