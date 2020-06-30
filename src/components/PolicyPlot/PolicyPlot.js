@@ -2,7 +2,6 @@ import React from 'react'
 import {
   VictoryChart,
   VictoryZoomContainer,
-  // VictoryCursorContainer,
   VictoryLine,
   VictoryArea,
   VictoryAxis,
@@ -15,6 +14,7 @@ import {
 import NavigatorPlot from './NavigatorPlot/NavigatorPlot'
 import AddInterventionCursor from './AddInterventionCursor/AddInterventionCursor'
 import PastInterventionInfo from './PastInterventionInfo/PastInterventionInfo'
+import AddInterventionDialog from './AddInterventionDialog/AddInterventionDialog'
 
 import styles from './PolicyPlot.module.scss'
 
@@ -29,6 +29,13 @@ const PolicyModel = props => {
     policyName: '',
     effectiveDate: '',
   })
+
+  const [addIntDialogState, setAddIntDialogState] = React.useState({
+    show: false,
+    x: 0,
+    y: 0,
+  })
+
   // not resizing plots to match
   // window aspect ratio anymore
   // just setting the main witdth to
@@ -142,6 +149,10 @@ const PolicyModel = props => {
       <PastInterventionInfo
         {...{ pastInterventionProps, setPastInterventionProps }}
       />
+      <AddInterventionDialog
+        position={addIntDialogState}
+        setPosition={setAddIntDialogState}
+      />
       <svg style={{ height: 0 }}>
         <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style={{ stopColor: '#00447c', stopOpacity: 1 }} />
@@ -170,8 +181,8 @@ const PolicyModel = props => {
         // height={
         //   (window.innerHeight / window.innerWidth) * 500 * percentProportion
         // }
-        scale={{ x: 'time' }}
         // style={{ height: percentProportion * 100 + '%' }}
+        scale={{ x: 'time' }}
         containerComponent={
           <VictoryZoomContainer
             className={styles.pct}
@@ -235,7 +246,11 @@ const PolicyModel = props => {
               onClick: (event, eventKey) => {
                 const today = new Date()
                 if (eventKey.cursorValue.x > today) {
-                  alert('Add intervention')
+                  setAddIntDialogState({
+                    show: true,
+                    x: event.clientX,
+                    y: event.clientY,
+                  })
                 }
               },
             },
@@ -249,15 +264,15 @@ const PolicyModel = props => {
         containerComponent={
           <VictoryZoomCursorContainer
             className={styles.chart}
-            cursorLabelComponent={<AddInterventionCursor />}
+            cursorLabelComponent={
+              <AddInterventionCursor showLabel={!addIntDialogState.show} />
+            }
             cursorComponent={<LineSegment style={{ display: 'none' }} />}
             cursorLabel={({ datum }) => `add intervention`}
-            // />
-            // <VictoryZoomContainer
             allowZoom={false}
             // If we want to re-enable panning, there will
             // need to be better event handling to separate
-            // clicking and panning gestures for adding interventions.
+            // panning and clicking to add interventions.
             allowPan={false}
             zoomDimension="x"
             zoomDomain={{ x: props.zoomDateRange }}

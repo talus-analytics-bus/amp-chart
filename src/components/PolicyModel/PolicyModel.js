@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-import loadModels from './LoadModels';
-import parseModels from './parseModels';
+import loadModels from './LoadModels'
+import parseModels from './parseModels'
 
 // import PolicyPlot from '../PolicyPlot/PolicyPlot';
-import State from '../State/State';
+import State from '../State/State'
 
-import styles from './PolicyModel.module.scss';
+import styles from './PolicyModel.module.scss'
 
-import states from './states';
+import states from './states'
 
 const PolicyModel = () => {
-  const [activeTab, setActiveTab] = useState('existing');
+  const [activeTab, setActiveTab] = useState('existing')
 
   // use selected states to load the required models
-  const [selectedStates, setSelectedStates] = useState(['CO']);
+  const [selectedStates, setSelectedStates] = useState(['CO', 'CA'])
 
   // curves selected by the user
   const [selectedCurves, setSelectedCurves] = useState([
@@ -23,12 +23,12 @@ const PolicyModel = () => {
     'infected_c',
     'R effective',
     'dead',
-  ]);
+  ])
 
-  const [curves, setCurves] = useState();
-  const [zoomDateRange, setZoomDateRange] = useState([0, 100]);
-  const [domain, setDomain] = useState([0, 100]);
-  const [caseLoadAxis, setCaseLoadAxis] = useState([0, 100]);
+  const [curves, setCurves] = useState()
+  const [zoomDateRange, setZoomDateRange] = useState([0, 100])
+  const [domain, setDomain] = useState([0, 100])
+  const [caseLoadAxis, setCaseLoadAxis] = useState([0, 100])
 
   //   const ModelSetup = async () => {
   //
@@ -36,20 +36,20 @@ const PolicyModel = () => {
 
   React.useEffect(() => {
     const initialSetup = async () => {
-      const loadedModels = await loadModels(selectedStates);
+      const loadedModels = await loadModels(selectedStates)
 
-      console.log(loadedModels);
+      console.log(loadedModels)
 
       // get curves, max, min from models
-      const modelCurves = parseModels(loadedModels, selectedCurves);
+      const modelCurves = parseModels(loadedModels, selectedCurves)
 
-      console.log(modelCurves);
-      setCurves(modelCurves);
+      console.log(modelCurves)
+      setCurves(modelCurves)
 
       // set up axes
       const dates = Object.values(modelCurves)
-        .map((state) => state.dateRange)
-        .flat();
+        .map(state => state.dateRange)
+        .flat()
 
       // console.log('Date Range: ', [
       //   dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
@@ -60,13 +60,13 @@ const PolicyModel = () => {
       setZoomDateRange([
         dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
         dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
-      ]);
+      ])
 
       // set overall domain; this will be used for the navigator plot.
       setDomain([
         dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
         dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
-      ]);
+      ])
 
       // console.log('Case Load Range: ', [
       //   0,
@@ -75,12 +75,12 @@ const PolicyModel = () => {
 
       setCaseLoadAxis([
         0,
-        Math.max(...Object.values(modelCurves).map((state) => state.yMax)),
-      ]);
-    };
+        Math.max(...Object.values(modelCurves).map(state => state.yMax)),
+      ])
+    }
 
-    initialSetup();
-  }, [selectedStates, selectedCurves]);
+    initialSetup()
+  }, [selectedStates, selectedCurves])
 
   return (
     <div className={styles.background}>
@@ -111,9 +111,9 @@ const PolicyModel = () => {
               Choose Location
               <select
                 value={selectedStates[0]}
-                onChange={(e) => setSelectedStates([e.target.value])}
+                onChange={e => setSelectedStates([e.target.value])}
               >
-                {states.map((state) => (
+                {states.map(state => (
                   <option key={state.abbr} value={state.abbr}>
                     {state.name}
                   </option>
@@ -162,7 +162,7 @@ const PolicyModel = () => {
         </section>
       </article>
     </div>
-  );
-};
+  )
+}
 
-export default PolicyModel;
+export default PolicyModel
