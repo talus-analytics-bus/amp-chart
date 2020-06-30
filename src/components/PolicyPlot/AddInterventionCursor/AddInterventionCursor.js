@@ -14,7 +14,7 @@ const AddInterventionCursor = props => {
   // middle of the "+" symbol
 
   // Only display the cursor if the date is in the future
-  if (props.datum.x > today) {
+  if ((props.datum.x > today) & (props.y > 30)) {
     // if there's space, display normal tooltip
     if (props.x < 400) {
       const [xOffset, yOffset] = [-10, -5]
