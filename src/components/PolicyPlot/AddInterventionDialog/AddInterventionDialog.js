@@ -18,6 +18,9 @@ const PastInterventionInfo = props => {
       ? styles.leftPopup
       : styles.rightPopup
 
+  const [rVal, setRVal] = React.useState(75)
+  const [interDate, setInterDate] = React.useState(props.position.date)
+
   return (
     <section
       display={props.position.show ? 'block' : 'none'}
@@ -38,7 +41,18 @@ const PastInterventionInfo = props => {
           <div className={styles.col}>
             <label>
               Effective Date
-              <input type="date" />
+              <input
+                type="date"
+                defaultValue={
+                  props.position.date === ''
+                    ? null
+                    : new Date(props.position.date).toISOString().substr(0, 10)
+                }
+                selected={interDate}
+                onChange={e => {
+                  setInterDate(new Date(e.target.value))
+                }}
+              />
             </label>
 
             <fieldset>
@@ -47,8 +61,9 @@ const PastInterventionInfo = props => {
                 <input
                   type="radio"
                   name="phase"
-                  value="phase1"
-                  // checked={true}
+                  value="12.5"
+                  checked={rVal <= 25}
+                  onChange={e => setRVal(e.target.value)}
                 />
                 Lockdown (phase 1)
               </label>
@@ -56,8 +71,9 @@ const PastInterventionInfo = props => {
                 <input
                   type="radio"
                   name="phase"
-                  value="phase2"
-                  // checked={true}
+                  value="37.5"
+                  checked={(rVal > 25) & (rVal <= 50)}
+                  onChange={e => setRVal(e.target.value)}
                 />
                 Stay at home (phase 2)
               </label>
@@ -65,8 +81,9 @@ const PastInterventionInfo = props => {
                 <input
                   type="radio"
                   name="phase"
-                  value="phase3"
-                  // checked={true}
+                  value="62.5"
+                  checked={(rVal > 50) & (rVal <= 75)}
+                  onChange={e => setRVal(e.target.value)}
                 />
                 Safer at home (phase 3)
               </label>
@@ -74,8 +91,9 @@ const PastInterventionInfo = props => {
                 <input
                   type="radio"
                   name="phase"
-                  value="phase4"
-                  // checked={true}
+                  value="87.5"
+                  checked={rVal > 75}
+                  onChange={e => setRVal(e.target.value)}
                 />
                 New normal (phase 4)
               </label>
@@ -94,13 +112,28 @@ const PastInterventionInfo = props => {
               >
                 cancel
               </button>
-              <button>Appy &amp; run</button>
+              <button
+                onClick={e => {
+                  e.preventDefault()
+                }}
+              >
+                Appy &amp; run
+              </button>
             </div>
           </div>
           <div className={styles.col}>
             <label>
               Use slider to adjust impact of policy on relative tranmission
-              <input type="range" className={styles.verticalSlider} />
+              <input
+                type="range"
+                className={styles.verticalSlider}
+                min="0"
+                max="100"
+                value={rVal}
+                onChange={e => {
+                  setRVal(Number(e.target.value))
+                }}
+              />
             </label>
           </div>
         </div>

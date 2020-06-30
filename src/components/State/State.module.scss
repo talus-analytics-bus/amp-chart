@@ -119,6 +119,20 @@
     margin: 0.5rem 0;
     background-color: white;
     // height: 90vh;
+
+    .inputRow {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 1rem;
+
+      button,
+      select {
+        margin-right: 1rem;
+        font-size: 1.3rem;
+        padding: 0.25em 0.5em;
+      }
+    }
+
     h1 {
       color: #00447c;
     }

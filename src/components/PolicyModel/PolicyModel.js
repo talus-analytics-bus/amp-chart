@@ -14,7 +14,7 @@ const PolicyModel = () => {
   const [activeTab, setActiveTab] = useState('existing')
 
   // use selected states to load the required models
-  const [selectedStates, setSelectedStates] = useState(['CO', 'CA'])
+  const [selectedStates, setSelectedStates] = useState(['CO', 'SC', 'IA'])
 
   // curves selected by the user
   const [selectedCurves, setSelectedCurves] = useState([
@@ -26,9 +26,9 @@ const PolicyModel = () => {
   ])
 
   const [curves, setCurves] = useState()
-  const [zoomDateRange, setZoomDateRange] = useState([0, 100])
-  const [domain, setDomain] = useState([0, 100])
-  const [caseLoadAxis, setCaseLoadAxis] = useState([0, 100])
+  const [zoomDateRange, setZoomDateRange] = useState([0, 1])
+  const [domain, setDomain] = useState([0, 1])
+  const [caseLoadAxis, setCaseLoadAxis] = useState([0, 1])
 
   //   const ModelSetup = async () => {
   //
@@ -137,28 +137,26 @@ const PolicyModel = () => {
               </select>
             </label>
           </div>
-          {curves && curves[selectedStates[0]] && (
-            <State
-              zoomDateRange={zoomDateRange}
-              setZoomDateRange={setZoomDateRange}
-              // dateOffset={0}
-              caseLoadAxis={caseLoadAxis}
-              selectedState={selectedStates[0]}
-              curves={curves[selectedStates[0]]}
-              domain={domain}
-            />
-          )}
-          {/* {curves && ( */}
-          {/*   <State */}
-          {/*     zoomDateRange={zoomDateRange} */}
-          {/*     setZoomDateRange={setZoomDateRange} */}
-          {/*     // dateOffset={0} */}
-          {/*     caseLoadAxis={caseLoadAxis} */}
-          {/*     selectedState={selectedStates[1]} */}
-          {/*     curves={curves[selectedStates[1]]} */}
-          {/*     domain={domain} */}
-          {/*   /> */}
-          {/* )} */}
+          {selectedStates.map(state => {
+            if (curves && curves[state]) {
+              return (
+                <State
+                  key={state}
+                  zoomDateRange={zoomDateRange}
+                  setZoomDateRange={setZoomDateRange}
+                  // dateOffset={0}
+                  caseLoadAxis={caseLoadAxis}
+                  selectedState={state}
+                  curves={curves[state]}
+                  domain={domain}
+                  activeTab={activeTab}
+                />
+              )
+            } else {
+              // This is where a loading component should go
+              return false
+            }
+          })}
         </section>
       </article>
     </div>

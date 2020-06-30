@@ -34,6 +34,7 @@ const PolicyModel = props => {
     show: false,
     x: 0,
     y: 0,
+    date: '',
   })
 
   // not resizing plots to match
@@ -114,26 +115,31 @@ const PolicyModel = props => {
       style={{
         data: { fill: 'firebrick', stroke: 'white', strokeWidth: 1 },
       }}
-      events={[
-        {
-          childName: 'all',
-          target: 'data',
+      events={
+        props.activeTab === 'interventions'
+          ? [
+              {
+                childName: 'all',
+                target: 'data',
 
-          eventHandlers: {
-            onMouseEnter: (event, eventKey) => {
-              setPastInterventionProps({
-                policyName: intervention.name,
-                effectiveDate: intervention.intervention_start_date,
-                x:
-                  window.pageXOffset +
-                  event.target.getBoundingClientRect().left,
-                y:
-                  window.pageYOffset + event.target.getBoundingClientRect().top,
-              })
-            },
-          },
-        },
-      ]}
+                eventHandlers: {
+                  onMouseEnter: (event, eventKey) => {
+                    setPastInterventionProps({
+                      policyName: intervention.name,
+                      effectiveDate: intervention.intervention_start_date,
+                      x:
+                        window.pageXOffset +
+                        event.target.getBoundingClientRect().left,
+                      y:
+                        window.pageYOffset +
+                        event.target.getBoundingClientRect().top,
+                    })
+                  },
+                },
+              },
+            ]
+          : []
+      }
       data={[
         {
           x: Date.parse(intervention.intervention_start_date),
@@ -239,23 +245,28 @@ const PolicyModel = props => {
         responsive={true}
         width={500}
         height={300}
-        events={[
-          {
-            target: 'parent',
-            eventHandlers: {
-              onClick: (event, eventKey) => {
-                const today = new Date()
-                if (eventKey.cursorValue.x > today) {
-                  setAddIntDialogState({
-                    show: true,
-                    x: event.clientX,
-                    y: event.clientY,
-                  })
-                }
-              },
-            },
-          },
-        ]}
+        events={
+          props.activeTab === 'interventions'
+            ? [
+                {
+                  target: 'parent',
+                  eventHandlers: {
+                    onClick: (event, eventKey) => {
+                      const today = new Date()
+                      if (eventKey.cursorValue.x > today) {
+                        setAddIntDialogState({
+                          show: true,
+                          x: event.clientX,
+                          y: event.clientY,
+                          date: eventKey.cursorValue.x,
+                        })
+                      }
+                    },
+                  },
+                },
+              ]
+            : []
+        }
         // height={
         // (window.innerHeight / window.innerWidth) * 500 * chartProportion
         // }
@@ -265,7 +276,11 @@ const PolicyModel = props => {
           <VictoryZoomCursorContainer
             className={styles.chart}
             cursorLabelComponent={
-              <AddInterventionCursor showLabel={!addIntDialogState.show} />
+              props.activeTab === 'interventions' ? (
+                <AddInterventionCursor showLabel={!addIntDialogState.show} />
+              ) : (
+                <LineSegment />
+              )
             }
             cursorComponent={<LineSegment style={{ display: 'none' }} />}
             cursorLabel={({ datum }) => `add intervention`}
