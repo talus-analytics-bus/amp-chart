@@ -11,7 +11,7 @@ const PastInterventionInfo = props => {
       ? props.position.x + arrowOffset.x
       : props.position.x - width - 6
 
-  const yPos = props.position.y - arrowOffset.y + window.scrollY
+  const yPos = props.position.y - arrowOffset.y
 
   const popupStyleName =
     props.position.x < window.innerWidth / 2

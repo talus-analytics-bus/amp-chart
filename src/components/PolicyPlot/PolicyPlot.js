@@ -115,31 +115,26 @@ const PolicyModel = props => {
       style={{
         data: { fill: 'firebrick', stroke: 'white', strokeWidth: 1 },
       }}
-      events={
-        props.activeTab === 'interventions'
-          ? [
-              {
-                childName: 'all',
-                target: 'data',
+      events={[
+        {
+          childName: 'all',
+          target: 'data',
 
-                eventHandlers: {
-                  onMouseEnter: (event, eventKey) => {
-                    setPastInterventionProps({
-                      policyName: intervention.name,
-                      effectiveDate: intervention.intervention_start_date,
-                      x:
-                        window.pageXOffset +
-                        event.target.getBoundingClientRect().left,
-                      y:
-                        window.pageYOffset +
-                        event.target.getBoundingClientRect().top,
-                    })
-                  },
-                },
-              },
-            ]
-          : []
-      }
+          eventHandlers: {
+            onMouseEnter: (event, eventKey) => {
+              setPastInterventionProps({
+                policyName: intervention.name,
+                effectiveDate: intervention.intervention_start_date,
+                x:
+                  window.pageXOffset +
+                  event.target.getBoundingClientRect().left,
+                y:
+                  window.pageYOffset + event.target.getBoundingClientRect().top,
+              })
+            },
+          },
+        },
+      ]}
       data={[
         {
           x: Date.parse(intervention.intervention_start_date),
@@ -257,7 +252,7 @@ const PolicyModel = props => {
                         setAddIntDialogState({
                           show: true,
                           x: event.clientX,
-                          y: event.clientY,
+                          y: event.clientY + window.scrollY,
                           date: eventKey.cursorValue.x,
                         })
                       }
