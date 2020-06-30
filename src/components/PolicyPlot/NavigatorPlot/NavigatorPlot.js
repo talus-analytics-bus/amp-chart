@@ -1,18 +1,18 @@
-import React from 'react';
+import React from 'react'
 import {
   VictoryChart,
   VictoryLine,
   VictoryArea,
   VictoryBrushContainer,
   VictoryAxis,
-} from 'victory';
+} from 'victory'
 
-import CustomBrush from '../CustomBrush/CustomBrush';
-import styles from './NavigatorPlot.module.scss';
+import CustomBrush from '../CustomBrush/CustomBrush'
+import styles from './NavigatorPlot.module.scss'
 
-const plotColors = ['#49615F99', '#394C5B99', '#4D3F2D99', '#4B384A99'];
+const plotColors = ['#49615F99', '#394C5B99', '#4D3F2D99', '#4B384A99']
 
-const NavigatorPlot = (props) => {
+const NavigatorPlot = props => {
   // The actuals lines of the plot
   const actualsLines = Object.entries(props.curves).map(
     ([curveName, data], index) => {
@@ -26,12 +26,12 @@ const NavigatorPlot = (props) => {
             data={data.actuals}
             // interpolation={'monotoneX'}
           />
-        );
+        )
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
   // WHY doesn't Victory let me return multiple lines from
   // the same map function? no reason that shouldn't work.
@@ -46,18 +46,18 @@ const NavigatorPlot = (props) => {
               data: {
                 stroke: plotColors[index],
                 strokeWidth: 1,
-                strokeDasharray: 4,
+                strokeDasharray: 2,
               },
             }}
             data={data.model}
             interpolation={'monotoneX'}
           />
-        );
+        )
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
   return (
     <VictoryChart
@@ -76,9 +76,9 @@ const NavigatorPlot = (props) => {
           brushDimension="x"
           brushComponent={<CustomBrush />}
           brushDomain={{ x: props.zoomDateRange }}
-          onBrushDomainChange={(domain) => {
+          onBrushDomainChange={domain => {
             // props.setZoomDomain({ x: domain.x, y: props.zoomDomain.y });
-            props.setZoomDateRange(domain.x);
+            props.setZoomDateRange(domain.x)
           }}
         />
       }
@@ -86,9 +86,9 @@ const NavigatorPlot = (props) => {
       <VictoryAxis
         tickValues={props.curves.infected_c.actuals
           .concat(props.curves.infected_c.model)
-          .map((day) => day.x)
+          .map(day => day.x)
           .filter((date, index) => index % 30 === 0)}
-        tickFormat={(x) =>
+        tickFormat={x =>
           new Date(x).toLocaleString('default', { month: 'short' })
         }
         style={{
@@ -135,7 +135,7 @@ const NavigatorPlot = (props) => {
         )
       }
     </VictoryChart>
-  );
-};
+  )
+}
 
-export default NavigatorPlot;
+export default NavigatorPlot

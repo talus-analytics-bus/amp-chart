@@ -14,6 +14,7 @@ import {
 
 import NavigatorPlot from './NavigatorPlot/NavigatorPlot'
 import AddInterventionCursor from './AddInterventionCursor/AddInterventionCursor'
+import PastInterventionInfo from './PastInterventionInfo/PastInterventionInfo'
 
 import styles from './PolicyPlot.module.scss'
 
@@ -22,6 +23,12 @@ const plotColors = ['#00a79d', '#00447c', '#7a4500', '#774573']
 const VictoryZoomCursorContainer = createContainer('zoom', 'cursor')
 
 const PolicyModel = props => {
+  const [pastInterventionProps, setPastInterventionProps] = React.useState({
+    x: 0,
+    y: 0,
+    policyName: '',
+    effectiveDate: '',
+  })
   // not resizing plots to match
   // window aspect ratio anymore
   // just setting the main witdth to
@@ -107,9 +114,15 @@ const PolicyModel = props => {
 
           eventHandlers: {
             onMouseEnter: (event, eventKey) => {
-              console.log('mouseover ' + intervention.name + ' event key ')
-              console.log(event)
-              console.log(eventKey)
+              setPastInterventionProps({
+                policyName: intervention.name,
+                effectiveDate: intervention.intervention_start_date,
+                x:
+                  window.pageXOffset +
+                  event.target.getBoundingClientRect().left,
+                y:
+                  window.pageYOffset + event.target.getBoundingClientRect().top,
+              })
             },
           },
         },
@@ -126,6 +139,9 @@ const PolicyModel = props => {
 
   return (
     <section className={styles.main}>
+      <PastInterventionInfo
+        {...{ pastInterventionProps, setPastInterventionProps }}
+      />
       <svg style={{ height: 0 }}>
         <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style={{ stopColor: '#00447c', stopOpacity: 1 }} />
