@@ -37,6 +37,25 @@ const PolicyModel = props => {
     date: '',
   })
 
+  const [windowSize, setWindowSize] = React.useState({
+    height: window.innerHeight,
+    width: window.innerWidth,
+  })
+
+  const updateWindowSize = e => {
+    setWindowSize({
+      height: window.innerHeight,
+      width: window.innerWidth,
+    })
+  }
+
+  React.useEffect(() => {
+    window.addEventListener('resize', updateWindowSize)
+    return () => {
+      window.removeEventListener('resize', updateWindowSize)
+    }
+  }, [])
+
   const percentProportion = 0.1
   const chartProportion = 0.45
   // const navigatorProportion = 0.125
@@ -174,7 +193,9 @@ const PolicyModel = props => {
         width={500}
         // height={80}
         height={
-          (window.innerHeight / window.innerWidth) * 500 * percentProportion
+          (windowSize.height / windowSize.width) * 500 * percentProportion > 25
+            ? (windowSize.height / windowSize.width) * 500 * percentProportion
+            : 25
         }
         style={{ height: percentProportion * 100 + '%' }}
         scale={{ x: 'time' }}
@@ -257,7 +278,9 @@ const PolicyModel = props => {
             : []
         }
         height={
-          (window.innerHeight / window.innerWidth) * 500 * chartProportion
+          (windowSize.height / windowSize.width) * 500 * chartProportion > 100
+            ? (windowSize.height / windowSize.width) * 500 * chartProportion
+            : 100
         }
         style={{ height: chartProportion * 100 + '%' }}
         scale={{ x: 'time' }}
