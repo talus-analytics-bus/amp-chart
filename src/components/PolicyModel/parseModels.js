@@ -17,12 +17,23 @@
 //   },
 // }
 
-export default function parseModelCurves(models, selectedCurves) {
-  const curves = {};
+// take a model run string and
+// parse it, including fixing dates
+const parseModelString = modelRun => {
+  const modelRunParsed = JSON.parse(modelRun).map(day => ({
+    ...day,
+    date: new Date(day.date),
+  }))
 
-  models.forEach((model) => {
-    const state = model.state;
-    console.log(state);
+  return modelRunParsed
+}
+
+export default function parseModelCurves(models, selectedCurves) {
+  const curves = {}
+
+  models.forEach(model => {
+    const state = model.state
+    console.log(state)
 
     // create state object
     curves[state] = {
@@ -33,19 +44,29 @@ export default function parseModelCurves(models, selectedCurves) {
       deaths: model.deaths,
       cases: model.cases,
       date: model.date,
-    };
+    }
+
+    // identify which run we want to use
+    const modelRun = parseModelString(
+      model.results.filter(run => Object.keys(run)[0] !== run).slice(-1)[0].run
+    )
+
+    console.log(
+      model.results.filter(run => Object.keys(run)[0] !== run).slice(-1)[0].name
+    )
+
+    const trimmedData = modelRun
+    console.log(trimmedData)
 
     // create basic structure
-    Object.keys(model.results.run[0]).forEach((column) => {
+    Object.keys(trimmedData[0]).forEach(column => {
       if (selectedCurves.includes(column)) {
-        curves[state].curves[column] = {};
-        curves[state].curves[column]['actuals'] = [];
-        curves[state].curves[column]['model'] = [];
-        curves[state].curves[column]['yMax'] = 0;
+        curves[state].curves[column] = {}
+        curves[state].curves[column]['actuals'] = []
+        curves[state].curves[column]['model'] = []
+        curves[state].curves[column]['yMax'] = 0
       }
-    });
-
-    const trimmedData = model.results.run;
+    })
 
     // split data into curves and maxiumus
     // split out actuals and model run
@@ -53,7 +74,7 @@ export default function parseModelCurves(models, selectedCurves) {
       Object.entries(day).forEach(([column, value]) => {
         if (selectedCurves.includes(column)) {
           // splitting out sources to make plotting easier later
-          const source = day.source === 'actuals' ? 'actuals' : 'model';
+          const source = day.source === 'actuals' ? 'actuals' : 'model'
           // skipping every fifth day of the model just to improve
           // rendering performance, especially with multiple plots
           if (source === 'model') {
@@ -64,37 +85,37 @@ export default function parseModelCurves(models, selectedCurves) {
               curves[state].curves[column][source].push({
                 x: day.date,
                 y: value,
-              });
+              })
             }
           } else {
             curves[state].curves[column][source].push({
               x: day.date,
               y: value,
-            });
+            })
           }
 
           // doing yMax as we go because we're already looping anyway
           curves[state].curves[column].yMax =
             curves[state].curves[column].yMax > value
               ? curves[state].curves[column].yMax
-              : value;
+              : value
         }
-      });
-    });
+      })
+    })
 
     // date range for the state
-    const dates = model.results.run.map((day) => day.date);
-    curves[state].dateRange.push(dates.slice(0, 1)[0]);
-    curves[state].dateRange.push(dates.slice(-1)[0]);
+    const dates = model.results.run.map(day => day.date)
+    curves[state].dateRange.push(dates.slice(0, 1)[0])
+    curves[state].dateRange.push(dates.slice(-1)[0])
 
     // yMax for the state
     const peaks = Object.entries(curves[state].curves).map(
       ([curve, points]) =>
         // selectedCurves.includes(curve) ? points.yMax : 0
         points.yMax
-    );
-    curves[state].yMax = Math.max(...peaks);
-  });
+    )
+    curves[state].yMax = Math.max(...peaks)
+  })
 
-  return curves;
+  return curves
 }

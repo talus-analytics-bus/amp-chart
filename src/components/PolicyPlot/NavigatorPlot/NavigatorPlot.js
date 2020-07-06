@@ -63,7 +63,7 @@ const NavigatorPlot = props => {
     <VictoryChart
       className={styles.navigator}
       // style={{ height: props.proportion * 100 + '%' }}
-      width={500}
+      width={800}
       height={100}
       // height={(window.innerHeight / window.innerWidth) * 500 * props.proportion}
       padding={{ top: 0, bottom: 25, left: 0, right: 0 }}

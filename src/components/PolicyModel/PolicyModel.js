@@ -11,7 +11,7 @@ import styles from './PolicyModel.module.scss'
 import states from './states'
 
 const PolicyModel = () => {
-  const [activeTab, setActiveTab] = useState('existing')
+  const [activeTab, setActiveTab] = useState('interventions')
 
   // use selected states to load the required models
   const [selectedStates, setSelectedStates] = useState(['CO', 'SC', 'IA'])
@@ -87,25 +87,25 @@ const PolicyModel = () => {
       <article className={styles.main}>
         <h1>Social distancing model (info button)</h1>
         <div className={styles.tabrow}>
-          <button
-            onClick={() => setActiveTab('existing')}
-            style={{
-              background: activeTab === 'existing' ? '#bde7ff' : '#bde7ff32',
-              color: activeTab === 'existing' ? 'inherit' : 'white',
-            }}
-          >
-            Existing policies
-          </button>
-          <button
-            onClick={() => setActiveTab('interventions')}
-            style={{
-              background:
-                activeTab === 'interventions' ? '#bde7ff' : '#bde7ff32',
-              color: activeTab === 'interventions' ? 'inherit' : 'white',
-            }}
-          >
-            Evaluate policy interventions
-          </button>
+          {/* <button */}
+          {/*   onClick={() => setActiveTab('existing')} */}
+          {/*   style={{ */}
+          {/*     background: activeTab === 'existing' ? '#bde7ff' : '#bde7ff32', */}
+          {/*     color: activeTab === 'existing' ? 'inherit' : 'white', */}
+          {/*   }} */}
+          {/* > */}
+          {/*   Existing policies */}
+          {/* </button> */}
+          {/* <button */}
+          {/*   onClick={() => setActiveTab('interventions')} */}
+          {/*   style={{ */}
+          {/*     background: */}
+          {/*       activeTab === 'interventions' ? '#bde7ff' : '#bde7ff32', */}
+          {/*     color: activeTab === 'interventions' ? 'inherit' : 'white', */}
+          {/*   }} */}
+          {/* > */}
+          {/*   Evaluate policy interventions */}
+          {/* </button> */}
           <div className={styles.location}>
             <label>
               Choose Location

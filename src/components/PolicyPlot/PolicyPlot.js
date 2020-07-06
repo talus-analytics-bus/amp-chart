@@ -43,9 +43,9 @@ const PolicyModel = props => {
   // the width of the rest of the amp
   // site now.
 
-  // const percentProportion = 0.15;
-  // const chartProportion = 0.6;
-  // const navigatorProportion = 0.2;
+  const percentProportion = 0.15
+  const chartProportion = 0.6
+  const navigatorProportion = 0.2
 
   // The actuals lines of the plot
   const actualsLines = Object.entries(props.data.curves).map(
@@ -154,35 +154,35 @@ const PolicyModel = props => {
         position={addIntDialogState}
         setPosition={setAddIntDialogState}
       />
-      <svg style={{ height: 0 }}>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style={{ stopColor: '#00447c', stopOpacity: 1 }} />
-          <stop
-            offset="100%"
-            style={{ stopColor: '#00447c', stopOpacity: 0 }}
-          />
-        </linearGradient>
-        <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop
-            offset="0%"
-            style={{ stopColor: '#00447c', stopOpacity: 0.5 }}
-          />
-          <stop
-            offset="100%"
-            style={{ stopColor: '#00447c', stopOpacity: 0 }}
-          />
-        </linearGradient>
-      </svg>
+      {/* <svg style={{ height: 0 }}> */}
+      {/*   <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%"> */}
+      {/*     <stop offset="0%" style={{ stopColor: '#00447c', stopOpacity: 1 }} /> */}
+      {/*     <stop */}
+      {/*       offset="100%" */}
+      {/*       style={{ stopColor: '#00447c', stopOpacity: 0 }} */}
+      {/*     /> */}
+      {/*   </linearGradient> */}
+      {/*   <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%"> */}
+      {/*     <stop */}
+      {/*       offset="0%" */}
+      {/*       style={{ stopColor: '#00447c', stopOpacity: 0.5 }} */}
+      {/*     /> */}
+      {/*     <stop */}
+      {/*       offset="100%" */}
+      {/*       style={{ stopColor: '#00447c', stopOpacity: 0 }} */}
+      {/*     /> */}
+      {/*   </linearGradient> */}
+      {/* </svg> */}
       <VictoryChart
         padding={{ top: 5, bottom: 0, left: 30, right: 10 }}
         domainPadding={10}
         responsive={true}
         width={500}
-        height={80}
-        // height={
-        //   (window.innerHeight / window.innerWidth) * 500 * percentProportion
-        // }
-        // style={{ height: percentProportion * 100 + '%' }}
+        // height={80}
+        height={
+          (window.innerHeight / window.innerWidth) * 500 * percentProportion
+        }
+        style={{ height: percentProportion * 100 + '%' }}
         scale={{ x: 'time' }}
         containerComponent={
           <VictoryZoomContainer
@@ -216,13 +216,13 @@ const PolicyModel = props => {
         />
         <VictoryArea
           style={{
-            data: { stroke: 'grey', strokeWidth: 0.5, fill: 'url(#grad1)' },
+            data: { stroke: 'grey', strokeWidth: 0.5, fill: '#3F9385' },
           }}
           data={props.data.curves['R effective'].actuals}
         />
         <VictoryArea
           style={{
-            data: { stroke: 'grey', strokeWidth: 0.5, fill: 'url(#grad2)' },
+            data: { stroke: 'grey', strokeWidth: 0.5, fill: '#C9E0DC' },
           }}
           data={props.data.curves['R effective'].model}
         />
@@ -239,7 +239,7 @@ const PolicyModel = props => {
         domainPadding={10}
         responsive={true}
         width={500}
-        height={300}
+        // height={300}
         events={
           props.activeTab === 'interventions'
             ? [
@@ -252,7 +252,7 @@ const PolicyModel = props => {
                         setAddIntDialogState({
                           show: true,
                           x: event.clientX,
-                          y: event.clientY + window.scrollY,
+                          y: event.clientY,
                           date: eventKey.cursorValue.x,
                         })
                       }
@@ -262,10 +262,10 @@ const PolicyModel = props => {
               ]
             : []
         }
-        // height={
-        // (window.innerHeight / window.innerWidth) * 500 * chartProportion
-        // }
-        // style={{ height: chartProportion * 100 + '%' }}
+        height={
+          (window.innerHeight / window.innerWidth) * 500 * chartProportion
+        }
+        style={{ height: chartProportion * 100 + '%' }}
         scale={{ x: 'time' }}
         containerComponent={
           <VictoryZoomCursorContainer

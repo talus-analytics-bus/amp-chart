@@ -3,7 +3,7 @@ import React from 'react'
 import styles from './AddInterventionDialog.module.scss'
 
 const PastInterventionInfo = props => {
-  const width = 600
+  const width = 300
   const arrowOffset = { x: 25, y: 41 }
 
   const xPos =
@@ -39,6 +39,10 @@ const PastInterventionInfo = props => {
         </div>
         <div className={styles.content}>
           <div className={styles.col}>
+            {/* <label> */}
+            {/*   Name of intervention */}
+            {/*   <input type="text" /> */}
+            {/* </label> */}
             <label>
               Effective Date
               <input
@@ -99,10 +103,6 @@ const PastInterventionInfo = props => {
               </label>
             </fieldset>
 
-            <label>
-              Name of intervention
-              <input type="text" />
-            </label>
             <div className={styles.buttonRow}>
               <button
                 onClick={e => {
@@ -121,21 +121,21 @@ const PastInterventionInfo = props => {
               </button>
             </div>
           </div>
-          <div className={styles.col}>
-            <label>
-              Use slider to adjust impact of policy on relative tranmission
-              <input
-                type="range"
-                className={styles.verticalSlider}
-                min="0"
-                max="100"
-                value={rVal}
-                onChange={e => {
-                  setRVal(Number(e.target.value))
-                }}
-              />
-            </label>
-          </div>
+          {/* <div className={styles.col}> */}
+          {/*   <label> */}
+          {/*     Use slider to adjust impact of policy on relative tranmission */}
+          {/*     <input */}
+          {/*       type="range" */}
+          {/*       className={styles.verticalSlider} */}
+          {/*       min="0" */}
+          {/*       max="100" */}
+          {/*       value={rVal} */}
+          {/*       onChange={e => { */}
+          {/*         setRVal(Number(e.target.value)) */}
+          {/*       }} */}
+          {/*     /> */}
+          {/*   </label> */}
+          {/* </div> */}
         </div>
       </form>
     </section>
