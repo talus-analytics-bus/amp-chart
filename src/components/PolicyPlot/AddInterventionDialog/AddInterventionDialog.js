@@ -35,7 +35,7 @@ const PastInterventionInfo = props => {
     >
       <form>
         <div className={styles.greySection}>
-          <h1>Add Intervention</h1>
+          <h1>Add Policies</h1>
         </div>
         <div className={styles.content}>
           <div className={styles.col}>
@@ -60,7 +60,7 @@ const PastInterventionInfo = props => {
             </label>
 
             <fieldset>
-              <legend>Choose phase</legend>
+              <legend>Add policies associated with</legend>
               <label>
                 <input
                   type="radio"
@@ -69,7 +69,7 @@ const PastInterventionInfo = props => {
                   checked={rVal <= 25}
                   onChange={e => setRVal(e.target.value)}
                 />
-                Lockdown (phase 1)
+                Lockdown
               </label>
               <label>
                 <input
@@ -79,7 +79,7 @@ const PastInterventionInfo = props => {
                   checked={(rVal > 25) & (rVal <= 50)}
                   onChange={e => setRVal(e.target.value)}
                 />
-                Stay at home (phase 2)
+                Stay at home
               </label>
               <label>
                 <input
@@ -89,7 +89,7 @@ const PastInterventionInfo = props => {
                   checked={(rVal > 50) & (rVal <= 75)}
                   onChange={e => setRVal(e.target.value)}
                 />
-                Safer at home (phase 3)
+                Safer at home
               </label>
               <label>
                 <input
@@ -99,7 +99,7 @@ const PastInterventionInfo = props => {
                   checked={rVal > 75}
                   onChange={e => setRVal(e.target.value)}
                 />
-                New normal (phase 4)
+                New normal
               </label>
             </fieldset>
 
