@@ -17,10 +17,10 @@ const AddInterventionCursor = props => {
     if (props.x < 400) {
       // offset the SVG so the cursor is at the
       // middle of the "+" symbol
-      const [xOffset, yOffset] = [-10, -5]
+      const [xOffset, yOffset] = [-7, 0]
       return (
         <g transform={`translate(${props.x + xOffset} ,${props.y + yOffset})`}>
-          <g transform="scale(.5)">
+          <g transform="scale(.33)">
             <path
               className={styles.st0}
               d="M9.9,20.4c-5.5,0-9.9,4.4-9.9,9.9s4.4,9.9,9.9,9.9c5.5,0,9.9-4.4,9.9-9.9S15.3,20.4,9.9,20.4z M14.5,31.1h-3.4
@@ -55,10 +55,10 @@ const AddInterventionCursor = props => {
     } else {
       // offset the SVG so the cursor is at the
       // middle of the "+" symbol
-      const [xOffset, yOffset] = [-103, -5]
+      const [xOffset, yOffset] = [-70, 0]
       return (
         <g transform={`translate(${props.x + xOffset} ,${props.y + yOffset})`}>
-          <g transform="scale(.5)">
+          <g transform="scale(.33)">
             <path
               className={styles.st0}
               d="M195,20.4c-5.5,0-9.9,4.4-9.9,9.9s4.4,9.9,9.9,9.9c5.5,0,9.9-4.4,9.9-9.9S200.4,20.4,195,20.4z M199.6,31.1

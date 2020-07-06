@@ -54,12 +54,12 @@ const State = props => {
         </div>
       </header>
       <div className={styles.policyPlot}>
-        <div className={styles.inputRow}>
-          <button onClick={e => e.preventDefault()}>reset</button>
-          <select>
-            <option value="percent">Interventions</option>
-          </select>
-        </div>
+        {/* <div className={styles.inputRow}> */}
+        {/*   <button onClick={e => e.preventDefault()}>reset</button> */}
+        {/*   <select> */}
+        {/*     <option value="percent">Interventions</option> */}
+        {/*   </select> */}
+        {/* </div> */}
         <PolicyPlot
           selectedState={props.selectedState}
           zoomDateRange={props.zoomDateRange}

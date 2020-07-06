@@ -37,15 +37,9 @@ const PolicyModel = props => {
     date: '',
   })
 
-  // not resizing plots to match
-  // window aspect ratio anymore
-  // just setting the main witdth to
-  // the width of the rest of the amp
-  // site now.
-
-  const percentProportion = 0.15
-  const chartProportion = 0.6
-  const navigatorProportion = 0.2
+  const percentProportion = 0.1
+  const chartProportion = 0.45
+  // const navigatorProportion = 0.125
 
   // The actuals lines of the plot
   const actualsLines = Object.entries(props.data.curves).map(
@@ -55,7 +49,7 @@ const PolicyModel = props => {
           <VictoryLine
             key={curveName}
             style={{
-              data: { stroke: plotColors[index], strokeWidth: 1 },
+              data: { stroke: plotColors[index], strokeWidth: 0.75 },
             }}
             data={data.actuals}
             // interpolation={'monotoneX'}
@@ -79,8 +73,8 @@ const PolicyModel = props => {
             style={{
               data: {
                 stroke: plotColors[index],
-                strokeWidth: 1,
-                strokeDasharray: 4,
+                strokeWidth: 0.75,
+                strokeDasharray: 3,
               },
             }}
             data={data.model}
@@ -111,7 +105,7 @@ const PolicyModel = props => {
     <VictoryScatter
       key={intervention.name + intervention.intervention_start_date}
       labelComponent={<VictoryLabel style={{ display: 'none' }} />}
-      size={5.5}
+      size={4}
       style={{
         data: { fill: 'firebrick', stroke: 'white', strokeWidth: 1 },
       }}
@@ -175,7 +169,7 @@ const PolicyModel = props => {
       {/* </svg> */}
       <VictoryChart
         padding={{ top: 5, bottom: 0, left: 30, right: 10 }}
-        domainPadding={10}
+        domainPadding={5}
         responsive={true}
         width={500}
         // height={80}
@@ -252,7 +246,7 @@ const PolicyModel = props => {
                         setAddIntDialogState({
                           show: true,
                           x: event.clientX,
-                          y: event.clientY,
+                          y: window.pageYOffset + event.clientY,
                           date: eventKey.cursorValue.x,
                         })
                       }
@@ -335,13 +329,13 @@ const PolicyModel = props => {
         {interventionPoints}
       </VictoryChart>
 
-      <NavigatorPlot
-        curves={props.data.curves}
-        zoomDateRange={props.zoomDateRange}
-        setZoomDateRange={props.setZoomDateRange}
-        domain={props.domain}
-        caseLoadAxis={props.caseLoadAxis}
-      />
+      {/* <NavigatorPlot */}
+      {/*   curves={props.data.curves} */}
+      {/*   zoomDateRange={props.zoomDateRange} */}
+      {/*   setZoomDateRange={props.setZoomDateRange} */}
+      {/*   domain={props.domain} */}
+      {/*   caseLoadAxis={props.caseLoadAxis} */}
+      {/* /> */}
     </section>
   )
 }

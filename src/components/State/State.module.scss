@@ -1,11 +1,18 @@
+.state:first-of-type {
+  header {
+    border-top-left-radius: 3rem;
+    border-top-right-radius: 3rem;
+  }
+}
+
 .state {
   color: #00447c;
   padding: 1rem;
+  padding-top: 0;
+  padding-bottom: 0;
 
   header {
     background-color: white;
-    border-top-left-radius: 3rem;
-    border-top-right-radius: 3rem;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;

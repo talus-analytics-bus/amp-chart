@@ -5,6 +5,7 @@ import parseModels from './parseModels'
 
 // import PolicyPlot from '../PolicyPlot/PolicyPlot';
 import State from '../State/State'
+import NavigatorPlot from '../PolicyPlot/NavigatorPlot/NavigatorPlot'
 
 import styles from './PolicyModel.module.scss'
 
@@ -14,7 +15,7 @@ const PolicyModel = () => {
   const [activeTab, setActiveTab] = useState('interventions')
 
   // use selected states to load the required models
-  const [selectedStates, setSelectedStates] = useState(['CO', 'SC', 'IA'])
+  const [selectedStates, setSelectedStates] = useState(['CO', 'IA'])
 
   // curves selected by the user
   const [selectedCurves, setSelectedCurves] = useState([
@@ -157,6 +158,15 @@ const PolicyModel = () => {
               return false
             }
           })}
+          {curves && curves[selectedStates[0]] && (
+            <NavigatorPlot
+              curves={curves[selectedStates[0]].curves}
+              zoomDateRange={zoomDateRange}
+              setZoomDateRange={setZoomDateRange}
+              domain={domain}
+              caseLoadAxis={caseLoadAxis}
+            />
+          )}
         </section>
       </article>
     </div>
