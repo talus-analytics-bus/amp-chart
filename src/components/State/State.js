@@ -39,7 +39,13 @@ const State = props => {
           </div>
           <div className={styles.noAction}>
             <label>
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={props.counterfactualSelected}
+                onChange={() =>
+                  props.setCounterfactualSelected(!props.counterfactualSelected)
+                }
+              />
               CASE COUNT WITH NO ACTIONS TAKEN
             </label>
             <div>
@@ -68,6 +74,7 @@ const State = props => {
           data={props.curves}
           domain={props.domain}
           activeTab={props.activeTab}
+          counterfactualSelected={props.counterfactualSelected}
         />
       </div>
     </section>

@@ -17,6 +17,8 @@ const PolicyModel = () => {
   // use selected states to load the required models
   const [selectedStates, setSelectedStates] = useState(['CO', 'IA'])
 
+  const [counterfactualSelected, setCounterfactualSelected] = useState(false)
+
   // curves selected by the user
   const [selectedCurves, setSelectedCurves] = useState([
     // 'infected_a',
@@ -42,7 +44,11 @@ const PolicyModel = () => {
       console.log(loadedModels)
 
       // get curves, max, min from models
-      const modelCurves = parseModels(loadedModels, selectedCurves)
+      const modelCurves = parseModels(
+        loadedModels,
+        selectedCurves,
+        counterfactualSelected
+      )
 
       console.log(modelCurves)
       setCurves(modelCurves)
@@ -81,7 +87,7 @@ const PolicyModel = () => {
     }
 
     initialSetup()
-  }, [selectedStates, selectedCurves])
+  }, [selectedStates, selectedCurves, counterfactualSelected])
 
   return (
     <div className={styles.background}>
@@ -151,6 +157,8 @@ const PolicyModel = () => {
                   curves={curves[state]}
                   domain={domain}
                   activeTab={activeTab}
+                  counterfactualSelected={counterfactualSelected}
+                  setCounterfactualSelected={setCounterfactualSelected}
                 />
               )
             } else {

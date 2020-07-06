@@ -12,10 +12,21 @@
   padding-bottom: 0;
 
   header {
+    position: relative;
     background-color: white;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+
+    &:after {
+      content: '';
+      position: absolute;
+      height: 3px;
+      left: 1rem;
+      right: 1rem;
+      bottom: 0;
+      background-color: #bde7ff;
+    }
 
     .stateName {
       display: flex;
@@ -123,7 +134,9 @@
   }
 
   .policyPlot {
+    // position: relative;
     margin: 0.5rem 0;
+    margin-top: 0;
     background-color: white;
     // height: 90vh;
 

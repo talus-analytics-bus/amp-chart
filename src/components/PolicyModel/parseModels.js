@@ -28,35 +28,65 @@ const parseModelString = modelRun => {
   return modelRunParsed
 }
 
-export default function parseModelCurves(models, selectedCurves) {
+export default function parseModelCurves(
+  models,
+  selectedCurves,
+  counterfactualSelected
+) {
   const curves = {}
 
   models.forEach(model => {
     const state = model.state
     console.log(state)
+    // console.log(model)
 
     // create state object
     curves[state] = {
       dateRange: [],
       yMax: 0,
       curves: {},
-      interventions: model.interventions,
+      interventions: model.interventions.filter(
+        inter => inter.name !== 'do_nothing'
+      ),
       deaths: model.deaths,
       cases: model.cases,
       date: model.date,
     }
 
     // identify which run we want to use
-    const modelRun = parseModelString(
-      model.results.filter(run => Object.keys(run)[0] !== run).slice(-1)[0].run
+    let modelRun
+
+    if (counterfactualSelected) {
+      modelRun = parseModelString(
+        model.results
+          .filter(run => Object.keys(run)[0] !== run)
+          .find(inter => inter.name.includes('do_nothing')).run
+      )
+    } else {
+      modelRun = parseModelString(
+        model.results.filter(run => Object.keys(run)[0] !== run).slice(-1)[0]
+          .run
+      )
+    }
+
+    const counterfactualRun = parseModelString(
+      model.results
+        .filter(run => Object.keys(run)[0] !== run)
+        .find(inter => inter.name.includes('do_nothing')).run
     )
 
-    console.log(
-      model.results.filter(run => Object.keys(run)[0] !== run).slice(-1)[0].name
-    )
+    // console.log(counterfactualRun)
+
+    // console.log(
+    //   parseModelString(
+    //     model.results
+    //       .filter(run => Object.keys(run)[0] !== run)
+    //       .find(inter => inter.name.includes('do_nothing')).run
+    //   )
+    // )
 
     const trimmedData = modelRun
-    console.log(trimmedData)
+    // console.log(trimmedData)
 
     // create basic structure
     Object.keys(trimmedData[0]).forEach(column => {
@@ -65,6 +95,10 @@ export default function parseModelCurves(models, selectedCurves) {
         curves[state].curves[column]['actuals'] = []
         curves[state].curves[column]['model'] = []
         curves[state].curves[column]['yMax'] = 0
+        curves[state].curves['CF_' + column] = {}
+        curves[state].curves['CF_' + column]['actuals'] = []
+        curves[state].curves['CF_' + column]['model'] = []
+        curves[state].curves['CF_' + column]['yMax'] = 0
       }
     })
 
@@ -86,13 +120,31 @@ export default function parseModelCurves(models, selectedCurves) {
                 x: day.date,
                 y: value,
               })
+              counterfactualRun[index] &&
+                // column === 'none' &&
+                curves[state].curves['CF_' + column]['model'].push({
+                  x: day.date,
+                  y: counterfactualRun[index][column],
+                })
             }
           } else {
             curves[state].curves[column][source].push({
               x: day.date,
               y: value,
             })
+            counterfactualRun[index] &&
+              // column === 'none' &&
+              curves[state].curves['CF_' + column]['model'].push({
+                x: day.date,
+                y: counterfactualRun[index][column],
+              })
           }
+
+          curves[state].curves['CF_' + column].yMax =
+            curves[state].curves['CF_' + column].yMax >
+            counterfactualRun[index][column]
+              ? curves[state].curves['CF_' + column].yMax
+              : counterfactualRun[index][column]
 
           // doing yMax as we go because we're already looping anyway
           curves[state].curves[column].yMax =
@@ -108,12 +160,15 @@ export default function parseModelCurves(models, selectedCurves) {
     curves[state].dateRange.push(dates.slice(0, 1)[0])
     curves[state].dateRange.push(dates.slice(-1)[0])
 
+    console.log(Object.entries(curves[state].curves))
+
     // yMax for the state
     const peaks = Object.entries(curves[state].curves).map(
       ([curve, points]) =>
         // selectedCurves.includes(curve) ? points.yMax : 0
         points.yMax
     )
+    console.log(peaks)
     curves[state].yMax = Math.max(...peaks)
   })
 

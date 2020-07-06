@@ -18,7 +18,15 @@ import AddInterventionDialog from './AddInterventionDialog/AddInterventionDialog
 
 import styles from './PolicyPlot.module.scss'
 
-const plotColors = ['#00a79d', '#00447c', '#7a4500', '#774573']
+const plotColors = [
+  '#00a79d',
+  '#ddd',
+  '#00447c',
+  '#ddd',
+  '#7a4500',
+  '#ddd',
+  '#774573',
+]
 
 const VictoryZoomCursorContainer = createContainer('zoom', 'cursor')
 
@@ -93,7 +101,7 @@ const PolicyModel = props => {
               data: {
                 stroke: plotColors[index],
                 strokeWidth: 0.75,
-                strokeDasharray: 3,
+                strokeDasharray: 2,
               },
             }}
             data={data.model}
@@ -250,6 +258,7 @@ const PolicyModel = props => {
         />
       </VictoryChart>
       <VictoryChart
+        // animate={{ duration: 1000 }}
         padding={{ top: 0, bottom: 15, left: 30, right: 10 }}
         domainPadding={10}
         responsive={true}
@@ -348,8 +357,8 @@ const PolicyModel = props => {
 
         {actualsLines}
         {modelLines}
-        {interventionLines}
-        {interventionPoints}
+        {props.counterfactualSelected ? <></> : interventionLines}
+        {props.counterfactualSelected ? <></> : interventionPoints}
       </VictoryChart>
 
       {/* <NavigatorPlot */}
