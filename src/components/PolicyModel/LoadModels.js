@@ -8,7 +8,9 @@ import axios from 'axios'
 // oldest acceptable model in the cache
 // (younger models will be used older will be deleted)
 const LIFESPAN = 60 * 60 * 1000
-const API_URL = 'http://192.168.1.33:8000/state_base_model/'
+const MODEL_VERSION = '1'
+// const API_URL = 'http://192.168.1.33:8000/state_base_model/'
+const API_URL = 'http://localhost:8000/state_base_model/'
 
 // request a model from the server
 // this should only happen if we
@@ -40,28 +42,41 @@ const parseModelDates = runData => {
 // save a model into local storage
 // saveModel expects a parsed model, not the string
 const saveModel = runData => {
+  localStorage.setItem('MODEL_VERSION', MODEL_VERSION)
+
   const modelName =
     runData.dateRequested.toISOString() + '_' + runData.state + '_MR'
+
   try {
     console.log('ModelCache: saving model ' + modelName)
-    window.localStorage.setItem(modelName, JSON.stringify(runData))
+    localStorage.setItem(modelName, JSON.stringify(runData))
   } catch (err) {
     const sortedKeys = Object.keys(localStorage).sort()
+
     console.log('ModelCache: deleting ' + sortedKeys[0])
     console.log('ModelCache: deleting ' + sortedKeys[1])
-    window.localStorage.removeItem(sortedKeys[0])
-    window.localStorage.removeItem(sortedKeys[1])
+    localStorage.removeItem(sortedKeys[0])
+    localStorage.removeItem(sortedKeys[1])
+
     console.log('ModelCache: saving model ' + modelName)
-    window.localStorage.setItem(modelName, JSON.stringify(runData))
+    localStorage.setItem(modelName, JSON.stringify(runData))
   }
 }
 
 // check if there is a sufficiently recent model run to use
 // if not, request a model from the server.
 const loadModels = async states => {
+  // If the model versions do not match, drop the entire localStorage.
+  // This lets us clear the user's cache if we push an incompatible update.
+  if (MODEL_VERSION !== localStorage.getItem('MODEL_VERSION')) {
+    console.log('New model version ' + MODEL_VERSION + ', dropping cache')
+    localStorage.clear()
+  }
+
   let models = await Promise.all(
     states.map(async state => {
       // console.log('ModelCache: loadModel ' + state);
+
       const stateModelNames = Object.keys(localStorage).filter(key =>
         key.endsWith(state + '_MR')
       )
