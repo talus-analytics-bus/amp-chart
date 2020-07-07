@@ -20,10 +20,32 @@ const State = props => {
     <section className={styles.state}>
       <header>
         <div className={styles.stateName}>
-          <h1>
-            {states.find(state => state.abbr === props.selectedState).name}
-          </h1>
-          <h2>{dateString}</h2>
+          <select
+            value={props.selectedState}
+            onChange={e => {
+              console.log('new array')
+              console.log(e.target.value)
+              console.log(props.selectedStates.indexOf(props.selectedState))
+              props.setSelectedStates(
+                props.selectedStates.splice(
+                  props.selectedStates.indexOf(props.selectedState),
+                  1,
+                  e.target.value
+                )
+              )
+            }}
+            aria-label={'Select a state to display'}
+          >
+            {states.map(state => (
+              <option key={state.abbr} value={state.abbr}>
+                {state.name}
+              </option>
+            ))}
+          </select>
+          {/* <h1> */}
+          {/*   {states.find(state => state.abbr === props.selectedState).name} */}
+          {/* </h1> */}
+          {/* <h2>{dateString}</h2> */}
         </div>
         <div className={styles.overviewStats}>
           <div className={styles.existing}>
@@ -46,7 +68,7 @@ const State = props => {
                   props.setCounterfactualSelected(!props.counterfactualSelected)
                 }
               />
-              CASE COUNT WITH NO ACTIONS TAKEN
+              COVID COUNT WITH NO ACTIONS TAKEN
             </label>
             <div>
               <h4>[API]</h4>

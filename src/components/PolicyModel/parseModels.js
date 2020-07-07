@@ -53,21 +53,25 @@ export default function parseModelCurves(
       date: model.date,
     }
 
-    // identify which run we want to use
-    let modelRun
+    //     identify which run we want to use
+    //     let modelRun
+    //
+    //     if (counterfactualSelected) {
+    //       modelRun = parseModelString(
+    //         model.results
+    //           .filter(run => Object.keys(run)[0] !== run)
+    //           .find(inter => inter.name.includes('do_nothing')).run
+    //       )
+    //     } else {
+    //       modelRun = parseModelString(
+    //         model.results.filter(run => Object.keys(run)[0] !== run).slice(-1)[0]
+    //           .run
+    //       )
+    //     }
 
-    if (counterfactualSelected) {
-      modelRun = parseModelString(
-        model.results
-          .filter(run => Object.keys(run)[0] !== run)
-          .find(inter => inter.name.includes('do_nothing')).run
-      )
-    } else {
-      modelRun = parseModelString(
-        model.results.filter(run => Object.keys(run)[0] !== run).slice(-1)[0]
-          .run
-      )
-    }
+    const modelRun = parseModelString(
+      model.results.filter(run => Object.keys(run)[0] !== run).slice(-1)[0].run
+    )
 
     const counterfactualRun = parseModelString(
       model.results
@@ -95,10 +99,13 @@ export default function parseModelCurves(
         curves[state].curves[column]['actuals'] = []
         curves[state].curves[column]['model'] = []
         curves[state].curves[column]['yMax'] = 0
-        curves[state].curves['CF_' + column] = {}
-        curves[state].curves['CF_' + column]['actuals'] = []
-        curves[state].curves['CF_' + column]['model'] = []
-        curves[state].curves['CF_' + column]['yMax'] = 0
+
+        if (counterfactualSelected) {
+          curves[state].curves['CF_' + column] = {}
+          curves[state].curves['CF_' + column]['actuals'] = []
+          curves[state].curves['CF_' + column]['model'] = []
+          curves[state].curves['CF_' + column]['yMax'] = 0
+        }
       }
     })
 
@@ -120,7 +127,8 @@ export default function parseModelCurves(
                 x: day.date,
                 y: value,
               })
-              counterfactualRun[index] &&
+              counterfactualSelected &&
+                counterfactualRun[index] &&
                 // column === 'none' &&
                 curves[state].curves['CF_' + column]['model'].push({
                   x: day.date,
@@ -132,7 +140,8 @@ export default function parseModelCurves(
               x: day.date,
               y: value,
             })
-            counterfactualRun[index] &&
+            counterfactualSelected &&
+              counterfactualRun[index] &&
               // column === 'none' &&
               curves[state].curves['CF_' + column]['model'].push({
                 x: day.date,
@@ -140,11 +149,13 @@ export default function parseModelCurves(
               })
           }
 
-          curves[state].curves['CF_' + column].yMax =
-            curves[state].curves['CF_' + column].yMax >
-            counterfactualRun[index][column]
-              ? curves[state].curves['CF_' + column].yMax
-              : counterfactualRun[index][column]
+          if (counterfactualSelected) {
+            curves[state].curves['CF_' + column].yMax =
+              curves[state].curves['CF_' + column].yMax >
+              counterfactualRun[index][column]
+                ? curves[state].curves['CF_' + column].yMax
+                : counterfactualRun[index][column]
+          }
 
           // doing yMax as we go because we're already looping anyway
           curves[state].curves[column].yMax =
@@ -168,7 +179,6 @@ export default function parseModelCurves(
         // selectedCurves.includes(curve) ? points.yMax : 0
         points.yMax
     )
-    console.log(peaks)
     curves[state].yMax = Math.max(...peaks)
   })
 

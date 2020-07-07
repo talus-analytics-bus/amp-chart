@@ -12,20 +12,20 @@ import styles from './PolicyModel.module.scss'
 import states from './states'
 
 const PolicyModel = () => {
-  const [activeTab, setActiveTab] = useState('interventions')
+  const [activeTab] = useState('interventions')
 
   // use selected states to load the required models
-  const [selectedStates, setSelectedStates] = useState(['CO', 'IA'])
+  const [selectedStates, setSelectedStates] = useState(['CO'])
 
   const [counterfactualSelected, setCounterfactualSelected] = useState(false)
 
   // curves selected by the user
   const [selectedCurves, setSelectedCurves] = useState([
     // 'infected_a',
-    'infected_b',
-    'infected_c',
+    // 'infected_b',
     'R effective',
-    'dead',
+    'infected_c',
+    // 'dead',
   ])
 
   const [curves, setCurves] = useState()
@@ -115,10 +115,13 @@ const PolicyModel = () => {
           {/* </button> */}
           <div className={styles.location}>
             <label>
-              Choose Location
+              Add a state to compare
               <select
                 value={selectedStates[0]}
-                onChange={e => setSelectedStates([e.target.value])}
+                onChange={e =>
+                  setSelectedStates([e.target.value, ...selectedStates])
+                }
+                disabled={selectedStates.length > 3}
               >
                 {states.map(state => (
                   <option key={state.abbr} value={state.abbr}>
@@ -139,10 +142,28 @@ const PolicyModel = () => {
             </label>
             <label>
               Show COVID count by
-              <select>
-                <option value="caseload">Caseload</option>
+              <select
+                selected={selectedCurves[0]}
+                onChange={e => {
+                  setSelectedCurves([e.target.value, 'R effective'])
+                }}
+              >
+                <option value="infected_a">Infected</option>
+                <option value="infected_b">Hospitalized</option>
+                <option value="infected_c">ICU</option>
+                <option value="dead">Deaths</option>
               </select>
             </label>
+            {/* <label> */}
+            {/*   <input */}
+            {/*     type="checkbox" */}
+            {/*     checked={counterfactualSelected} */}
+            {/*     onChange={() => */}
+            {/*       setCounterfactualSelected(!counterfactualSelected) */}
+            {/*     } */}
+            {/*   /> */}
+            {/*   COVID COUNT WITH NO ACTIONS TAKEN */}
+            {/* </label> */}
           </div>
           {selectedStates.map(state => {
             if (curves && curves[state]) {
@@ -154,6 +175,8 @@ const PolicyModel = () => {
                   // dateOffset={0}
                   caseLoadAxis={caseLoadAxis}
                   selectedState={state}
+                  setSelectedStates={setSelectedStates}
+                  selectedStates={selectedStates}
                   curves={curves[state]}
                   domain={domain}
                   activeTab={activeTab}

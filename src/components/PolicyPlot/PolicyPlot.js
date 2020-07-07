@@ -11,7 +11,6 @@ import {
   LineSegment,
 } from 'victory'
 
-import NavigatorPlot from './NavigatorPlot/NavigatorPlot'
 import AddInterventionCursor from './AddInterventionCursor/AddInterventionCursor'
 import PastInterventionInfo from './PastInterventionInfo/PastInterventionInfo'
 import AddInterventionDialog from './AddInterventionDialog/AddInterventionDialog'
@@ -19,14 +18,24 @@ import AddInterventionDialog from './AddInterventionDialog/AddInterventionDialog
 import styles from './PolicyPlot.module.scss'
 
 const plotColors = [
-  '#00a79d',
-  '#ddd',
+  // '#00a79d',
+  '#173244',
+  '#6C92AB',
+  '#aeaeae',
   '#00447c',
-  '#ddd',
+  '#aeaeae',
   '#7a4500',
-  '#ddd',
+  '#aeaeae',
   '#774573',
 ]
+
+const interventionColors = {
+  Lockdown: '#661B3C',
+  'Unclear lockdown level': '#7F7F7F',
+  'Stay at home': '#C1272D',
+  'Safer at home': '#D66B3E',
+  'New open': '#ECBD62',
+}
 
 const VictoryZoomCursorContainer = createContainer('zoom', 'cursor')
 
@@ -117,7 +126,9 @@ const PolicyModel = props => {
   const interventionLines = props.data.interventions.map(intervention => (
     <VictoryLine
       key={intervention.name + intervention.intervention_start_date}
-      style={{ data: { stroke: 'firebrick', strokeWidth: 1 } }}
+      style={{
+        data: { stroke: interventionColors[intervention.name], strokeWidth: 1 },
+      }}
       data={[
         { x: Date.parse(intervention.intervention_start_date), y: 0 },
         {
@@ -134,7 +145,11 @@ const PolicyModel = props => {
       labelComponent={<VictoryLabel style={{ display: 'none' }} />}
       size={4}
       style={{
-        data: { fill: 'firebrick', stroke: 'white', strokeWidth: 1 },
+        data: {
+          fill: interventionColors[intervention.name],
+          stroke: 'white',
+          strokeWidth: 1,
+        },
       }}
       events={[
         {
@@ -357,8 +372,8 @@ const PolicyModel = props => {
 
         {actualsLines}
         {modelLines}
-        {props.counterfactualSelected ? <></> : interventionLines}
-        {props.counterfactualSelected ? <></> : interventionPoints}
+        {interventionLines}
+        {interventionPoints}
       </VictoryChart>
 
       {/* <NavigatorPlot */}

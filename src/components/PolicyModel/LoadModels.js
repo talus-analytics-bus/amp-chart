@@ -41,12 +41,17 @@ const parseModelDates = runData => {
 // saveModel expects a parsed model, not the string
 const saveModel = runData => {
   const modelName =
-    'MR_' + runData.state + '_' + runData.dateRequested.toISOString()
-  console.log('ModelCache: saving model ' + modelName)
+    runData.dateRequested.toISOString() + '_' + runData.state + '_MR'
   try {
+    console.log('ModelCache: saving model ' + modelName)
     window.localStorage.setItem(modelName, JSON.stringify(runData))
-  } catch {
-    localStorage.removeItem(localStorage.key(0))
+  } catch (err) {
+    const sortedKeys = Object.keys(localStorage).sort()
+    console.log('ModelCache: deleting ' + sortedKeys[0])
+    console.log('ModelCache: deleting ' + sortedKeys[1])
+    window.localStorage.removeItem(sortedKeys[0])
+    window.localStorage.removeItem(sortedKeys[1])
+    console.log('ModelCache: saving model ' + modelName)
     window.localStorage.setItem(modelName, JSON.stringify(runData))
   }
 }
@@ -58,12 +63,12 @@ const loadModels = async states => {
     states.map(async state => {
       // console.log('ModelCache: loadModel ' + state);
       const stateModelNames = Object.keys(localStorage).filter(key =>
-        key.startsWith('MR_' + state)
+        key.endsWith(state + '_MR')
       )
 
       const now = new Date()
       const modelName = stateModelNames.find(modelName => {
-        if (now - new Date(modelName.split('_').slice(-1)) < LIFESPAN) {
+        if (now - new Date(modelName.split('_')[0]) < LIFESPAN) {
           return true
         } else {
           // clean up too-old models
