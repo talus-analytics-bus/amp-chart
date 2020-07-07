@@ -52,17 +52,19 @@ const saveModel = runData => {
   const modelName =
     runData.dateRequested.toISOString() + '_' + runData.state + '_MR'
 
+  // Browsers throw inconsistent errors, so catching everything...
   try {
     console.log('ModelCache: saving model ' + modelName)
     localStorage.setItem(modelName, JSON.stringify(runData))
   } catch (err) {
+    // Delete oldest two models if there is an error
     const sortedKeys = Object.keys(localStorage).sort()
-
     console.log('ModelCache: deleting ' + sortedKeys[0])
     console.log('ModelCache: deleting ' + sortedKeys[1])
     localStorage.removeItem(sortedKeys[0])
     localStorage.removeItem(sortedKeys[1])
 
+    // Save new model now that we've made room
     console.log('ModelCache: saving model ' + modelName)
     localStorage.setItem(modelName, JSON.stringify(runData))
   }
@@ -71,6 +73,7 @@ const saveModel = runData => {
 // check if there is a sufficiently recent model run to use
 // if not, request a model from the server.
 const loadModels = async states => {
+  // Model version check, dropping the whole localStorage
   if (MODEL_VERSION !== localStorage.getItem('MODEL_VERSION')) {
     console.log('New model version ' + MODEL_VERSION + ', dropping cache')
     localStorage.clear()
