@@ -8,7 +8,12 @@ import axios from 'axios'
 // oldest acceptable model in the cache
 // (younger models will be used older will be deleted)
 const LIFESPAN = 60 * 60 * 1000
+
+// If the model versions do not match, drop the entire
+// localStorage. This lets us clear all client caching
+// if we push an incompatible update.
 const MODEL_VERSION = '1'
+
 // const API_URL = 'http://192.168.1.33:8000/state_base_model/'
 const API_URL = 'http://localhost:8000/state_base_model/'
 
@@ -66,8 +71,6 @@ const saveModel = runData => {
 // check if there is a sufficiently recent model run to use
 // if not, request a model from the server.
 const loadModels = async states => {
-  // If the model versions do not match, drop the entire localStorage.
-  // This lets us clear the user's cache if we push an incompatible update.
   if (MODEL_VERSION !== localStorage.getItem('MODEL_VERSION')) {
     console.log('New model version ' + MODEL_VERSION + ', dropping cache')
     localStorage.clear()
