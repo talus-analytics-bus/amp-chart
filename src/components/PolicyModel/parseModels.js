@@ -37,7 +37,7 @@ export default function parseModelCurves(
 
   models.forEach(model => {
     const state = model.state
-    console.log(state)
+    // console.log(state)
     // console.log(model)
 
     // create state object
@@ -171,7 +171,7 @@ export default function parseModelCurves(
     curves[state].dateRange.push(dates.slice(0, 1)[0])
     curves[state].dateRange.push(dates.slice(-1)[0])
 
-    console.log(Object.entries(curves[state].curves))
+    // console.log(Object.entries(curves[state].curves))
 
     // yMax for the state
     const peaks = Object.entries(curves[state].curves).map(

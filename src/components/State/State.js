@@ -24,15 +24,16 @@ const State = props => {
             value={props.selectedState}
             onChange={e => {
               console.log('new array')
-              console.log(e.target.value)
-              console.log(props.selectedStates.indexOf(props.selectedState))
-              props.setSelectedStates(
-                props.selectedStates.splice(
-                  props.selectedStates.indexOf(props.selectedState),
-                  1,
-                  e.target.value
-                )
-              )
+              console.log([...e.target.value, props.selectedStates])
+              // console.log(props.selectedStates.indexOf(props.selectedState))
+              props.setSelectedStates([...e.target.value, props.selectedStates])
+              // props.setSelectedStates(
+              //   props.selectedStates.splice(
+              //     props.selectedStates.indexOf(props.selectedState),
+              //     1,
+              //     e.target.value
+              //   )
+              // )
             }}
             aria-label={'Select a state to display'}
           >

@@ -41,7 +41,7 @@ const PolicyModel = () => {
     const initialSetup = async () => {
       const loadedModels = await loadModels(selectedStates)
 
-      console.log(loadedModels)
+      // console.log(loadedModels)
 
       // get curves, max, min from models
       const modelCurves = parseModels(
@@ -50,7 +50,7 @@ const PolicyModel = () => {
         counterfactualSelected
       )
 
-      console.log(modelCurves)
+      // console.log(modelCurves)
       setCurves(modelCurves)
 
       // set up axes

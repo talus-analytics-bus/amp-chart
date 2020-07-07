@@ -7,7 +7,7 @@ import axios from 'axios'
 
 // oldest acceptable model in the cache
 // (younger models will be used older will be deleted)
-const LIFESPAN = 60 * 60 * 24 * 1000
+const LIFESPAN = 60 * 60 * 1000
 const API_URL = 'http://192.168.1.33:8000/state_base_model/'
 
 // request a model from the server
