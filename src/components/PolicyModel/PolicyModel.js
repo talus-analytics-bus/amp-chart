@@ -5,6 +5,7 @@ import parseModels from './parseModels'
 
 // import PolicyPlot from '../PolicyPlot/PolicyPlot';
 import State from '../State/State'
+import LoadingState from '../LoadingState/LoadingState'
 import NavigatorPlot from '../PolicyPlot/NavigatorPlot/NavigatorPlot'
 
 import styles from './PolicyModel.module.scss'
@@ -29,9 +30,15 @@ const PolicyModel = () => {
   ])
 
   const [curves, setCurves] = useState()
-  const [zoomDateRange, setZoomDateRange] = useState([0, 1])
-  const [domain, setDomain] = useState([0, 1])
-  const [caseLoadAxis, setCaseLoadAxis] = useState([0, 1])
+  const [zoomDateRange, setZoomDateRange] = useState([
+    new Date('2020-01-01'),
+    new Date('2021-01-01'),
+  ])
+  const [domain, setDomain] = useState([
+    new Date('2020-01-01'),
+    new Date('2021-01-01'),
+  ])
+  const [caseLoadAxis, setCaseLoadAxis] = useState([0, 10000])
 
   //   const ModelSetup = async () => {
   //
@@ -121,7 +128,7 @@ const PolicyModel = () => {
                 onChange={e =>
                   setSelectedStates([e.target.value, ...selectedStates])
                 }
-                disabled={selectedStates.length > 3}
+                disabled={selectedStates.length >= 3}
               >
                 {states.map(state => (
                   <option key={state.abbr} value={state.abbr}>
@@ -165,11 +172,13 @@ const PolicyModel = () => {
             {/*   COVID COUNT WITH NO ACTIONS TAKEN */}
             {/* </label> */}
           </div>
-          {selectedStates.map(state => {
+          {selectedStates.map((state, index) => {
             if (curves && curves[state]) {
+              // console.log(curves[state])
               return (
                 <State
                   key={state}
+                  index={index}
                   zoomDateRange={zoomDateRange}
                   setZoomDateRange={setZoomDateRange}
                   // dateOffset={0}
@@ -186,7 +195,24 @@ const PolicyModel = () => {
               )
             } else {
               // This is where a loading component should go
-              return false
+              return (
+                <LoadingState
+                  key={state}
+                  state={state}
+                  zoomDateRange={zoomDateRange}
+                  setZoomDateRange={setZoomDateRange}
+                  // dateOffset={0}
+                  caseLoadAxis={caseLoadAxis}
+                  selectedState={state}
+                  setSelectedStates={setSelectedStates}
+                  selectedStates={selectedStates}
+                  // curves={curves[state]}
+                  domain={domain}
+                  activeTab={activeTab}
+                  counterfactualSelected={counterfactualSelected}
+                  setCounterfactualSelected={setCounterfactualSelected}
+                />
+              )
             }
           })}
           {curves && curves[selectedStates[0]] && (

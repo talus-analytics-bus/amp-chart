@@ -32,9 +32,11 @@ const plotColors = [
 const interventionColors = {
   Lockdown: '#661B3C',
   'Unclear lockdown level': '#7F7F7F',
+  'Mixed distancing levels': '#7F7F7F',
   'Stay at home': '#C1272D',
   'Safer at home': '#D66B3E',
   'New open': '#ECBD62',
+  'New normal': '#ECBD62',
 }
 
 const VictoryZoomCursorContainer = createContainer('zoom', 'cursor')

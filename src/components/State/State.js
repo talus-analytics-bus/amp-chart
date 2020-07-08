@@ -24,9 +24,11 @@ const State = props => {
             value={props.selectedState}
             onChange={e => {
               console.log('new array')
-              console.log([...e.target.value, props.selectedStates])
+              const newSelectedStates = [...props.selectedStates]
+              newSelectedStates[props.index] = e.target.value
+              console.log(newSelectedStates)
               // console.log(props.selectedStates.indexOf(props.selectedState))
-              props.setSelectedStates([...e.target.value, props.selectedStates])
+              props.setSelectedStates(newSelectedStates)
               // props.setSelectedStates(
               //   props.selectedStates.splice(
               //     props.selectedStates.indexOf(props.selectedState),
