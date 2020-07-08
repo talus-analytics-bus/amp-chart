@@ -129,7 +129,13 @@ const PolicyModel = props => {
     <VictoryLine
       key={intervention.name + intervention.intervention_start_date}
       style={{
-        data: { stroke: interventionColors[intervention.name], strokeWidth: 1 },
+        data: {
+          stroke:
+            new Date(intervention.intervention_start_date) > new Date()
+              ? '#8d64dd'
+              : interventionColors[intervention.name],
+          strokeWidth: 1,
+        },
       }}
       data={[
         { x: Date.parse(intervention.intervention_start_date), y: 0 },
@@ -148,7 +154,10 @@ const PolicyModel = props => {
       size={4}
       style={{
         data: {
-          fill: interventionColors[intervention.name],
+          fill:
+            new Date(intervention.intervention_start_date) > new Date()
+              ? '#8d64dd'
+              : interventionColors[intervention.name],
           stroke: 'white',
           strokeWidth: 1,
         },
