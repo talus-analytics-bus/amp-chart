@@ -14,7 +14,8 @@ const LIFESPAN = 60 * 60 * 1000
 // if we push an incompatible update.
 const MODEL_VERSION = '1'
 
-const API_URL = 'http://192.168.1.33:8000/state_base_model/'
+const API_URL = 'http://192.168.1.33:8000/'
+// const API_URL = 'http://ec2-13-58-161-197.us-east-2.compute.amazonaws.com:8080/'
 // const API_URL = 'http://localhost:8000/state_base_model/'
 
 // request a model from the server
@@ -22,7 +23,7 @@ const API_URL = 'http://192.168.1.33:8000/state_base_model/'
 // don't already have a recent model locally
 const requestModel = async state => {
   console.log('ModelCache: requesting model ' + state)
-  const result = await axios(API_URL + state)
+  const result = await axios(API_URL + 'state_base_model/' + state)
 
   const runData = parseModelDates(result.data)
   runData['dateRequested'] = new Date()
@@ -31,6 +32,54 @@ const requestModel = async state => {
   saveModel(runData)
 
   return runData
+}
+
+const requestIntervention = async (state, intervention) => {
+  let model = (await loadModels([state]))[0]
+  console.log(model)
+
+  console.log('\n\n')
+  console.log('post')
+
+  axios
+    .post(API_URL + 'intervention_run/' + model.modelrun, intervention)
+    .catch(async err => {
+      // if the server returns an error,
+      // delete the base model and then
+      // request a new base model.
+      deleteModel(model)
+      model = await loadModels([state])
+      console.log(model)
+    })
+    .then(result => {
+      console.log(result)
+
+      const runData = parseModelDates(result.data)
+      const newIntervention = runData.interventions.slice(-1)[0]
+      runData['dateRequested'] = new Date(model.dateRequested)
+      runData['cases'] = model.cases
+      runData['deaths'] = model.deaths
+
+      console.log(newIntervention)
+
+      // check if model interventions include the latest,
+      // if not, copy the array from the old cached model
+      // and then add the latest intervention from the new one
+      if (
+        !model.interventions.find(
+          inter => inter.startdate === newIntervention.startdate
+        )
+      ) {
+        console.log([...model.interventions, newIntervention])
+        runData['interventions'] = [...model.interventions, newIntervention]
+      }
+
+      // save new model
+      console.log('ModelCache: received ' + state + ' model with intervention')
+      saveModel(runData)
+
+      console.log(runData)
+    })
 }
 
 // take a model run string and
@@ -70,9 +119,18 @@ const saveModel = runData => {
   }
 }
 
+const deleteModel = model => {
+  const modelName = model.dateRequested + '_' + model.state + '_MR'
+  console.log('ModelCache: deleting model ' + modelName)
+  localStorage.removeItem(modelName)
+}
+
 // check if there is a sufficiently recent model run to use
 // if not, request a model from the server.
 const loadModels = async states => {
+  // only for testing!!
+  // localStorage.clear()
+
   // Model version check, dropping the whole localStorage
   if (MODEL_VERSION !== localStorage.getItem('MODEL_VERSION')) {
     console.log('New model version ' + MODEL_VERSION + ', dropping cache')
@@ -115,5 +173,36 @@ const loadModels = async states => {
 
   return models
 }
+
+requestIntervention('CO', {
+  name: 'First Intervention',
+  system_name: 'string',
+  description: 'string',
+  startdate: '2020-07-20',
+  params: { beta_mild: 0.0, beta_asymp: 0.0 },
+  intervention_type: 'intervention',
+})
+
+setTimeout(() => {
+  requestIntervention('CO', {
+    name: 'Second Intervention',
+    system_name: 'test',
+    description: 'string',
+    startdate: '2020-09-08',
+    params: { beta_mild: 0.3, beta_asymp: 0.3 },
+    intervention_type: 'intervention',
+  })
+}, 1000)
+
+setTimeout(() => {
+  requestIntervention('CO', {
+    name: 'Third Intervention',
+    system_name: 'string',
+    description: 'string',
+    startdate: '2020-11-08',
+    params: { beta_mild: 0.4, beta_asymp: 0.4 },
+    intervention_type: 'intervention',
+  })
+}, 5000)
 
 export default loadModels

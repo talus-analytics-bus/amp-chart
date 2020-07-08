@@ -40,15 +40,9 @@ const PolicyModel = () => {
   ])
   const [caseLoadAxis, setCaseLoadAxis] = useState([0, 10000])
 
-  //   const ModelSetup = async () => {
-  //
-  //   }
-
   React.useEffect(() => {
     const initialSetup = async () => {
       const loadedModels = await loadModels(selectedStates)
-
-      // console.log(loadedModels)
 
       // get curves, max, min from models
       const modelCurves = parseModels(
@@ -65,11 +59,6 @@ const PolicyModel = () => {
         .map(state => state.dateRange)
         .flat()
 
-      // console.log('Date Range: ', [
-      //   dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
-      //   dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
-      // ]);
-
       // Initialize the zoom range as all dates
       setZoomDateRange([
         dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
@@ -81,11 +70,6 @@ const PolicyModel = () => {
         dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
         dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
       ])
-
-      // console.log('Case Load Range: ', [
-      //   0,
-      //   Math.max(...Object.values(modelCurves).map((state) => state.yMax)),
-      // ]);
 
       setCaseLoadAxis([
         0,
@@ -177,7 +161,7 @@ const PolicyModel = () => {
               // console.log(curves[state])
               return (
                 <State
-                  key={state}
+                  key={state + index}
                   index={index}
                   zoomDateRange={zoomDateRange}
                   setZoomDateRange={setZoomDateRange}
@@ -187,6 +171,8 @@ const PolicyModel = () => {
                   setSelectedStates={setSelectedStates}
                   selectedStates={selectedStates}
                   curves={curves[state]}
+                  setCurves={setCurves}
+                  allCurves={curves}
                   domain={domain}
                   activeTab={activeTab}
                   counterfactualSelected={counterfactualSelected}

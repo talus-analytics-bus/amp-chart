@@ -289,7 +289,10 @@ const PolicyModel = props => {
                   eventHandlers: {
                     onClick: (event, eventKey) => {
                       const today = new Date()
-                      if (eventKey.cursorValue.x > today) {
+                      if (
+                        eventKey.cursorValue !== null &&
+                        eventKey.cursorValue.x > today
+                      ) {
                         setAddIntDialogState({
                           show: true,
                           x: event.clientX,
@@ -314,7 +317,8 @@ const PolicyModel = props => {
           <VictoryZoomCursorContainer
             className={styles.chart}
             cursorLabelComponent={
-              props.activeTab === 'interventions' ? (
+              (props.activeTab === 'interventions') &
+              (pastInterventionProps.policyName === '') ? (
                 <AddInterventionCursor showLabel={!addIntDialogState.show} />
               ) : (
                 <LineSegment />

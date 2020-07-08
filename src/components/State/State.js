@@ -23,7 +23,6 @@ const State = props => {
           <select
             value={props.selectedState}
             onChange={e => {
-              console.log('new array')
               const newSelectedStates = [...props.selectedStates]
               newSelectedStates[props.index] = e.target.value
               console.log(newSelectedStates)

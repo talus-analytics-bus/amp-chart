@@ -12,7 +12,7 @@ const AddInterventionCursor = props => {
   const today = new Date()
 
   // Only display the cursor if the date is in the future
-  if ((props.datum.x > today) & (props.y > 30)) {
+  if ((props.datum.x > today) & (props.y > 3)) {
     // if there's space, display normal tooltip
     if (props.x < 400) {
       // offset the SVG so the cursor is at the
