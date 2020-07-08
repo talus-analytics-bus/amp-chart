@@ -85,18 +85,18 @@ const NavigatorPlot = props => {
         }
       >
         <VictoryAxis
-          tickValues={props.curves['R effective'].actuals
-            .concat(props.curves['R effective'].model)
-            .map(day => day.x)
-            .filter((date, index) => index % 30 === 0)}
-          tickFormat={x =>
-            new Date(x).toLocaleString('default', { month: 'short' })
-          }
+          // tickValues={props.curves['R effective'].actuals
+          //   .concat(props.curves['R effective'].model)
+          //   .map(day => day.x)
+          //   .filter((date, index) => index % 30 === 0)}
+          // tickFormat={x =>
+          //   new Date(x).toLocaleString('default', { month: 'short' })
+          // }
           style={{
             tickLabels: {
               fontFamily: 'Rawline',
               fontWeight: '500',
-              fontSize: '4',
+              fontSize: '8',
             },
           }}
         />

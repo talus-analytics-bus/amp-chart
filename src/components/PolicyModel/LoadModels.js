@@ -173,36 +173,37 @@ const loadModels = async states => {
 
   return models
 }
-
-requestIntervention('CO', {
-  name: 'First Intervention',
-  system_name: 'string',
-  description: 'string',
-  startdate: '2020-07-20',
-  params: { beta_mild: 0.0, beta_asymp: 0.0 },
-  intervention_type: 'intervention',
-})
-
-setTimeout(() => {
-  requestIntervention('CO', {
-    name: 'Second Intervention',
-    system_name: 'test',
-    description: 'string',
-    startdate: '2020-09-08',
-    params: { beta_mild: 0.3, beta_asymp: 0.3 },
-    intervention_type: 'intervention',
-  })
-}, 1000)
-
-setTimeout(() => {
-  requestIntervention('CO', {
-    name: 'Third Intervention',
-    system_name: 'string',
-    description: 'string',
-    startdate: '2020-11-08',
-    params: { beta_mild: 0.4, beta_asymp: 0.4 },
-    intervention_type: 'intervention',
-  })
-}, 5000)
+// setTimeout(() => {
+//   requestIntervention('CO', {
+//     name: 'First Intervention',
+//     system_name: 'string',
+//     description: 'string',
+//     startdate: '2020-07-20',
+//     params: { beta_mild: 0.0, beta_asymp: 0.0 },
+//     intervention_type: 'intervention',
+//   })
+// }, 2000)
+//
+// setTimeout(() => {
+//   requestIntervention('CO', {
+//     name: 'Second Intervention',
+//     system_name: 'test',
+//     description: 'string',
+//     startdate: '2020-09-08',
+//     params: { beta_mild: 0.2, beta_asymp: 0.2 },
+//     intervention_type: 'intervention',
+//   })
+// }, 5000)
+//
+// setTimeout(() => {
+//   requestIntervention('CO', {
+//     name: 'Third Intervention',
+//     system_name: 'string',
+//     description: 'string',
+//     startdate: '2020-11-08',
+//     params: { beta_mild: 0.4, beta_asymp: 0.4 },
+//     intervention_type: 'intervention',
+//   })
+// }, 9000)
 
 export default loadModels

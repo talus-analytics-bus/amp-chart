@@ -83,7 +83,7 @@ const PolicyModel = () => {
   return (
     <div className={styles.background}>
       <article className={styles.main}>
-        <h1>Social distancing model (info button)</h1>
+        <h1 className={styles.title}>Social distancing model (info button)</h1>
         <div className={styles.tabrow}>
           {/* <button */}
           {/*   onClick={() => setActiveTab('existing')} */}

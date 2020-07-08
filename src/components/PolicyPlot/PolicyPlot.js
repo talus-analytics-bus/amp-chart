@@ -220,6 +220,7 @@ const PolicyModel = props => {
       {/*     /> */}
       {/*   </linearGradient> */}
       {/* </svg> */}
+      <h1>Effective R</h1>
       <VictoryChart
         padding={{ top: 5, bottom: 0, left: 30, right: 10 }}
         domainPadding={5}
@@ -259,7 +260,7 @@ const PolicyModel = props => {
               fill: '#aaa',
               fontFamily: 'Rawline',
               fontWeight: '500',
-              fontSize: 4,
+              fontSize: 5,
             },
           }}
         />
@@ -283,9 +284,10 @@ const PolicyModel = props => {
           ]}
         />
       </VictoryChart>
+      <h1>CASELOAD</h1>
       <VictoryChart
         // animate={{ duration: 1000 }}
-        padding={{ top: 0, bottom: 15, left: 30, right: 10 }}
+        padding={{ top: 0, bottom: 17, left: 30, right: 10 }}
         domainPadding={10}
         responsive={true}
         width={500}
@@ -362,7 +364,7 @@ const PolicyModel = props => {
               fill: '#aaa',
               fontFamily: 'Rawline',
               fontWeight: '500',
-              fontSize: 4,
+              fontSize: 5,
             },
           }}
         />
@@ -372,7 +374,7 @@ const PolicyModel = props => {
             tickLabels: {
               fontFamily: 'Rawline',
               fontWeight: '500',
-              fontSize: '4',
+              fontSize: '5',
             },
           }}
         />
