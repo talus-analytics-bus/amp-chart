@@ -118,7 +118,7 @@ const PolicyModel = props => {
               },
             }}
             data={data.model}
-            interpolation={'monotoneX'}
+            interpolation={'natural'}
           />
         )
       } else {
