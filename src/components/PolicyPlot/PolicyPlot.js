@@ -200,6 +200,8 @@ const PolicyModel = props => {
       <AddInterventionDialog
         position={addIntDialogState}
         setPosition={setAddIntDialogState}
+        addIntervention={props.addIntervention}
+        selectedState={props.selectedState}
       />
       {/* <svg style={{ height: 0 }}> */}
       {/*   <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%"> */}

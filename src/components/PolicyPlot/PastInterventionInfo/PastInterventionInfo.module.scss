@@ -50,8 +50,10 @@ $grey-highlight: #eee;
       padding: 0;
     }
 
-    h1 {
+    .title {
       font-size: 1.4rem;
+      color: #1a4278;
+      text-transform: uppercase;
     }
 
     p {

@@ -115,6 +115,20 @@ const PastInterventionInfo = props => {
               <button
                 onClick={e => {
                   e.preventDefault()
+                  const intervention = {
+                    name: 'First Intervention',
+                    system_name: 'string',
+                    description: 'string',
+                    startdate:
+                      interDate === ''
+                        ? new Date(props.position.date)
+                            .toISOString()
+                            .substr(0, 10)
+                        : interDate.toISOString(),
+                    params: { beta_mild: 0.0, beta_asymp: 0.0 },
+                    intervention_type: 'intervention',
+                  }
+                  props.addIntervention(props.selectedState, intervention)
                 }}
               >
                 Appy &amp; run

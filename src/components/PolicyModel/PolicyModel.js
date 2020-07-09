@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import loadModels from './LoadModels'
+import loadModels, { requestIntervention } from './LoadModels'
 import parseModels from './parseModels'
 
 // import PolicyPlot from '../PolicyPlot/PolicyPlot';
@@ -40,44 +40,51 @@ const PolicyModel = () => {
   ])
   const [caseLoadAxis, setCaseLoadAxis] = useState([0, 10000])
 
+  const addIntervention = (state, intervention) => {
+    const newCurves = Object.assign({}, curves)
+    delete newCurves[state]
+    setCurves(newCurves)
+    requestIntervention(state, intervention).then(() => setup())
+  }
+
+  const setup = async () => {
+    const loadedModels = await loadModels(selectedStates)
+
+    // get curves, max, min from models
+    const modelCurves = parseModels(
+      loadedModels,
+      selectedCurves,
+      counterfactualSelected
+    )
+
+    // console.log(modelCurves)
+    setCurves(modelCurves)
+
+    // set up axes
+    const dates = Object.values(modelCurves)
+      .map(state => state.dateRange)
+      .flat()
+
+    // Initialize the zoom range as all dates
+    setZoomDateRange([
+      dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
+      dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
+    ])
+
+    // set overall domain; this will be used for the navigator plot.
+    setDomain([
+      dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
+      dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
+    ])
+
+    setCaseLoadAxis([
+      0,
+      Math.max(...Object.values(modelCurves).map(state => state.yMax)),
+    ])
+  }
+
   React.useEffect(() => {
-    const initialSetup = async () => {
-      const loadedModels = await loadModels(selectedStates)
-
-      // get curves, max, min from models
-      const modelCurves = parseModels(
-        loadedModels,
-        selectedCurves,
-        counterfactualSelected
-      )
-
-      // console.log(modelCurves)
-      setCurves(modelCurves)
-
-      // set up axes
-      const dates = Object.values(modelCurves)
-        .map(state => state.dateRange)
-        .flat()
-
-      // Initialize the zoom range as all dates
-      setZoomDateRange([
-        dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
-        dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
-      ])
-
-      // set overall domain; this will be used for the navigator plot.
-      setDomain([
-        dates.reduce((prev, curr) => (prev > curr ? curr : prev)),
-        dates.reduce((prev, curr) => (prev < curr ? curr : prev)),
-      ])
-
-      setCaseLoadAxis([
-        0,
-        Math.max(...Object.values(modelCurves).map(state => state.yMax)),
-      ])
-    }
-
-    initialSetup()
+    setup()
   }, [selectedStates, selectedCurves, counterfactualSelected])
 
   return (
@@ -165,6 +172,7 @@ const PolicyModel = () => {
                   index={index}
                   zoomDateRange={zoomDateRange}
                   setZoomDateRange={setZoomDateRange}
+                  addIntervention={addIntervention}
                   // dateOffset={0}
                   caseLoadAxis={caseLoadAxis}
                   selectedState={state}

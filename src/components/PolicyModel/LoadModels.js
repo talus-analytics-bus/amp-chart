@@ -34,14 +34,12 @@ const requestModel = async state => {
   return runData
 }
 
-const requestIntervention = async (state, intervention) => {
+export const requestIntervention = async (state, intervention) => {
   let model = (await loadModels([state]))[0]
-  console.log(model)
 
-  console.log('\n\n')
-  console.log('post')
+  console.log(intervention)
 
-  axios
+  await axios
     .post(API_URL + 'intervention_run/' + model.modelrun, intervention)
     .catch(async err => {
       // if the server returns an error,
@@ -49,18 +47,13 @@ const requestIntervention = async (state, intervention) => {
       // request a new base model.
       deleteModel(model)
       model = await loadModels([state])
-      console.log(model)
     })
     .then(result => {
-      console.log(result)
-
       const runData = parseModelDates(result.data)
       const newIntervention = runData.interventions.slice(-1)[0]
       runData['dateRequested'] = new Date(model.dateRequested)
       runData['cases'] = model.cases
       runData['deaths'] = model.deaths
-
-      console.log(newIntervention)
 
       // check if model interventions include the latest,
       // if not, copy the array from the old cached model
@@ -70,15 +63,14 @@ const requestIntervention = async (state, intervention) => {
           inter => inter.startdate === newIntervention.startdate
         )
       ) {
-        console.log([...model.interventions, newIntervention])
         runData['interventions'] = [...model.interventions, newIntervention]
       }
 
       // save new model
-      console.log('ModelCache: received ' + state + ' model with intervention')
+      console.log('ModelCache: saving ' + state + ' model with intervention')
       saveModel(runData)
 
-      console.log(runData)
+      // console.log(runData)
     })
 }
 
@@ -127,7 +119,7 @@ const deleteModel = model => {
 
 // check if there is a sufficiently recent model run to use
 // if not, request a model from the server.
-const loadModels = async states => {
+export const loadModels = async states => {
   // only for testing!!
   // localStorage.clear()
 

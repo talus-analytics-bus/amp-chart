@@ -99,6 +99,7 @@ const State = props => {
           domain={props.domain}
           activeTab={props.activeTab}
           counterfactualSelected={props.counterfactualSelected}
+          addIntervention={props.addIntervention}
         />
       </div>
     </section>

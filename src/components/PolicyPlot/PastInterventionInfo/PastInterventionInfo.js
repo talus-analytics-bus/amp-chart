@@ -39,7 +39,12 @@ const PastInterventionInfo = props => {
       }}
     >
       <div className={styles.greySection}>
-        <h1>{props.policyName}</h1>
+        <h1 className={styles.title}>
+          {props.policyName}{' '}
+          {props.policyName !== 'Mixed distancing levels'
+            ? 'Policies Implemented'
+            : ''}
+        </h1>
       </div>
       <div className={styles.content}>
         <p>Effective Date: {props.effectiveDate}</p>
