@@ -10,11 +10,11 @@ const formatNumber = number =>
 
 const State = props => {
   // console.log(cumulativeCases);
-  const dateString = new Date(props.curves.date).toLocaleString('default', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  // const dateString = new Date(props.curves.date).toLocaleString('default', {
+  //   month: 'short',
+  //   day: 'numeric',
+  //   year: 'numeric',
+  // })
 
   return (
     <section className={styles.state}>

@@ -48,7 +48,7 @@ const PastInterventionInfo = props => {
       </div>
       <div className={styles.content}>
         <p>Effective Date: {props.effectiveDate}</p>
-        <a href="#">view policy</a>
+        <a href="https://covidamp.org/data">view policy</a>
       </div>
     </section>
   )

@@ -22,11 +22,11 @@ const PolicyModel = () => {
 
   // curves selected by the user
   const [selectedCurves, setSelectedCurves] = useState([
-    // 'infected_a',
+    'infected_a',
     // 'infected_b',
-    'R effective',
-    'infected_c',
+    // 'infected_c',
     // 'dead',
+    'R effective',
   ])
 
   const [curves, setCurves] = useState()
@@ -149,7 +149,7 @@ const PolicyModel = () => {
             <label>
               Show COVID count by
               <select
-                selected={selectedCurves[0]}
+                value={selectedCurves[0]}
                 onChange={e => {
                   setSelectedCurves([e.target.value, 'R effective'])
                 }}
