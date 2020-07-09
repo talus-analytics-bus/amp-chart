@@ -40,6 +40,14 @@ const PolicyModel = () => {
   ])
   const [caseLoadAxis, setCaseLoadAxis] = useState([0, 10000])
 
+  // memoization helps here but it would also
+  // need to track the latest intervention as a
+  // dependency and I don't have that built yet
+  // const callbackModels = React.useMemo(
+  //   async () => await loadModels(selectedStates),
+  //   [selectedStates]
+  // )
+
   const setup = React.useCallback(async () => {
     const loadedModels = await loadModels(selectedStates)
 
@@ -75,6 +83,7 @@ const PolicyModel = () => {
       Math.max(...Object.values(modelCurves).map(state => state.yMax)),
     ])
   }, [
+    // callbackModels,
     selectedStates,
     selectedCurves,
     counterfactualSelected,

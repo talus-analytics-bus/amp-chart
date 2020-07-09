@@ -130,10 +130,7 @@ const PolicyModel = props => {
       key={intervention.name + intervention.intervention_start_date}
       style={{
         data: {
-          stroke:
-            new Date(intervention.intervention_start_date) > new Date()
-              ? '#8d64dd'
-              : interventionColors[intervention.name],
+          stroke: interventionColors[intervention.name.split('_')[0]],
           strokeWidth: 1,
         },
       }}
@@ -156,9 +153,12 @@ const PolicyModel = props => {
         data: {
           fill:
             new Date(intervention.intervention_start_date) > new Date()
-              ? '#8d64dd'
-              : interventionColors[intervention.name],
-          stroke: 'white',
+              ? 'white'
+              : interventionColors[intervention.name.split('_')[0]],
+          stroke:
+            new Date(intervention.intervention_start_date) > new Date()
+              ? interventionColors[intervention.name.split('_')[0]]
+              : 'white',
           strokeWidth: 1,
         },
       }}
@@ -170,7 +170,7 @@ const PolicyModel = props => {
           eventHandlers: {
             onMouseEnter: (event, eventKey) => {
               setPastInterventionProps({
-                policyName: intervention.name,
+                policyName: intervention.name.split('_')[0],
                 effectiveDate: intervention.intervention_start_date,
                 x:
                   window.pageXOffset +
@@ -224,7 +224,7 @@ const PolicyModel = props => {
       {/* </svg> */}
       <h1>Effective R</h1>
       <VictoryChart
-        padding={{ top: 5, bottom: 0, left: 30, right: 10 }}
+        padding={{ top: 2, bottom: 0, left: 30, right: 10 }}
         domainPadding={5}
         responsive={true}
         width={500}

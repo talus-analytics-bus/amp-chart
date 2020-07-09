@@ -14,9 +14,10 @@ const LIFESPAN = 60 * 60 * 1000
 // if we push an incompatible update.
 const MODEL_VERSION = '1'
 
-// const API_URL = 'http://192.168.1.33:8000/'
+const API_URL = 'http://192.168.1.33:8000/'
 // const API_URL = 'http://ec2-13-58-161-197.us-east-2.compute.amazonaws.com:8080/'
-const API_URL = 'http://localhost:8000/'
+// const API_URL = 'http://localhost:8000/'
+// const API_URL = 'http://127.0.0.0:8000/'
 
 // request a model from the server
 // this should only happen if we
@@ -120,7 +121,7 @@ const deleteModel = model => {
 // check if there is a sufficiently recent model run to use
 // if not, request a model from the server.
 export const loadModels = async states => {
-  // only for testing!!
+  // this disables the whole cache for testing
   // localStorage.clear()
 
   // Model version check, dropping the whole localStorage

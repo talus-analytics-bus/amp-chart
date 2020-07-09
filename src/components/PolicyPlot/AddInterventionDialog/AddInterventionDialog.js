@@ -21,6 +21,13 @@ const PastInterventionInfo = props => {
   const [rVal, setRVal] = React.useState(0.15)
   const [interDate, setInterDate] = React.useState(props.position.date)
 
+  const policyNames = {
+    0.1: 'Lockdown',
+    0.15: 'Stay at home',
+    0.25: 'Safer at home',
+    0.35: 'New normal',
+  }
+
   return (
     <section
       display={props.position.show ? 'block' : 'none'}
@@ -115,19 +122,25 @@ const PastInterventionInfo = props => {
               <button
                 onClick={e => {
                   e.preventDefault()
+                  console.log(policyNames[rVal])
+                  console.log(rVal)
+                  const startDate =
+                    interDate === ''
+                      ? new Date(props.position.date)
+                          .toISOString()
+                          .substr(0, 10)
+                      : interDate.toISOString()
+
                   const intervention = {
-                    name: 'First Intervention',
+                    name: policyNames[rVal] + '_' + startDate,
                     system_name: 'string',
                     description: 'string',
-                    startdate:
-                      interDate === ''
-                        ? new Date(props.position.date)
-                            .toISOString()
-                            .substr(0, 10)
-                        : interDate.toISOString(),
+                    startdate: startDate,
+
                     params: { beta_mild: rVal, beta_asymp: rVal },
                     intervention_type: 'intervention',
                   }
+                  console.log(intervention)
                   props.addIntervention(props.selectedState, intervention)
                 }}
               >

@@ -19,6 +19,8 @@ const PastInterventionInfo = props => {
   const popupStyleName =
     props.x < window.innerWidth / 2 ? styles.leftPopup : styles.rightPopup
 
+  const proposed = new Date(props.effectiveDate) > new Date()
+
   return (
     <section
       display={props.policyName !== '' ? 'block' : 'none'}
@@ -41,14 +43,18 @@ const PastInterventionInfo = props => {
       <div className={styles.greySection}>
         <h1 className={styles.title}>
           {props.policyName}{' '}
-          {props.policyName !== 'Mixed distancing levels'
+          {!proposed && props.policyName !== 'Mixed distancing levels'
             ? 'Policies Implemented'
             : ''}
+          {proposed && 'Policies Proposed'}
         </h1>
       </div>
       <div className={styles.content}>
-        <p>Effective Date: {props.effectiveDate}</p>
-        <a href="https://covidamp.org/data">view policy</a>
+        <p>
+          {proposed ? 'Proposal Date: ' : 'Effective Date: '}
+          {props.effectiveDate}
+        </p>
+        {!proposed && <a href="https://covidamp.org/data">view policy</a>}
       </div>
     </section>
   )
