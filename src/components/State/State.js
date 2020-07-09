@@ -36,6 +36,15 @@ const State = props => {
             ))}
           </select>
           <button
+            className={styles.resetState}
+            onClick={e => {
+              e.preventDefault()
+              props.resetState(props.selectedState)
+            }}
+          >
+            Reset Interventions
+          </button>
+          <button
             className={styles.removeState}
             disabled={props.selectedStates.length < 2}
             onClick={e => {
@@ -45,16 +54,8 @@ const State = props => {
               props.setSelectedStates(newSelectedStates)
             }}
           >
-            Remove State
-          </button>
-          <button
-            className={styles.resetState}
-            onClick={e => {
-              e.preventDefault()
-              props.resetState(props.selectedState)
-            }}
-          >
-            Reset State
+            Remove{' '}
+            {states.find(state => state.abbr === props.selectedState).name}
           </button>
           {/* <h1> */}
           {/*   {states.find(state => state.abbr === props.selectedState).name} */}

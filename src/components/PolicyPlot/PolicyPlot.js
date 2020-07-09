@@ -137,7 +137,17 @@ const PolicyModel = props => {
         },
       }}
       data={[
-        { x: Date.parse(intervention.intervention_start_date), y: 0 },
+        {
+          x: Date.parse(intervention.intervention_start_date),
+          // extend the lines slightly below zero so the circles can
+          // sit on the date axis without getting chopped off.
+          // this is a hack, the proper approach would be a custom
+          // label component that sits within a <VictoryPortal>.
+          // not going to take the time because I expect this request to change.
+          // y: -(props.caseLoadAxis[1] * (window.innerWidth / 40000)),
+          // ...and it changed.
+          y: 0,
+        },
         {
           x: Date.parse(intervention.intervention_start_date),
           y: props.caseLoadAxis[1],
@@ -150,7 +160,9 @@ const PolicyModel = props => {
     <VictoryScatter
       key={intervention.name + intervention.intervention_start_date}
       labelComponent={<VictoryLabel style={{ display: 'none' }} />}
-      size={4}
+      size={
+        new Date(intervention.intervention_start_date) > new Date() ? 3.5 : 4
+      }
       style={{
         data: {
           fill:
@@ -178,7 +190,13 @@ const PolicyModel = props => {
                   window.pageXOffset +
                   event.target.getBoundingClientRect().left,
                 y:
-                  window.pageYOffset + event.target.getBoundingClientRect().top,
+                  new Date(intervention.intervention_start_date) < new Date()
+                    ? window.pageYOffset +
+                      event.target.getBoundingClientRect().top
+                    : // need to adjust for the different size circle
+                      window.pageYOffset +
+                      event.target.getBoundingClientRect().top -
+                      2,
               })
             },
           },
@@ -187,7 +205,11 @@ const PolicyModel = props => {
       data={[
         {
           x: Date.parse(intervention.intervention_start_date),
-          y: props.caseLoadAxis[1],
+          y:
+            // new Date(intervention.intervention_start_date) > new Date()
+            // ? -(props.caseLoadAxis[1] * 0.004)
+            // :
+            props.caseLoadAxis[1] * 0.8,
           label: intervention.name,
         },
       ]}
@@ -225,8 +247,8 @@ const PolicyModel = props => {
       {/*   </linearGradient> */}
       {/* </svg> */}
       <VictoryChart
-        padding={{ top: 5, bottom: 0, left: 30, right: 10 }}
-        domainPadding={5}
+        padding={{ top: 11, bottom: 0, left: 30, right: 10 }}
+        domainPadding={0}
         responsive={true}
         width={500}
         // height={80}
@@ -254,7 +276,7 @@ const PolicyModel = props => {
           x={4.5}
           y={4}
           style={{
-            fontSize: 5,
+            fontSize: 6,
             fontWeight: 700,
             fontFamily: 'Rawline',
             fill: '#6d6d6d',
@@ -262,7 +284,8 @@ const PolicyModel = props => {
         />
         <VictoryAxis
           dependentAxis
-          // tickFormat={(tick) => tick / 1000 + 'K'}
+          tickFormat={tick => (tick === parseInt(tick) ? parseInt(tick) : null)}
+          offsetX={30}
           style={{
             grid: {
               stroke: '#aaaaaa',
@@ -275,6 +298,7 @@ const PolicyModel = props => {
               fontFamily: 'Rawline',
               fontWeight: '500',
               fontSize: 5,
+              textAnchor: 'middle',
             },
           }}
         />
@@ -308,8 +332,8 @@ const PolicyModel = props => {
       </VictoryChart>
       <VictoryChart
         // animate={{ duration: 1000 }}
-        padding={{ top: 8, bottom: 17, left: 30, right: 10 }}
-        domainPadding={10}
+        padding={{ top: 12, bottom: 20, left: 30, right: 10 }}
+        domainPadding={0}
         responsive={true}
         width={500}
         // height={300}
@@ -376,7 +400,7 @@ const PolicyModel = props => {
           x={4.5}
           y={6}
           style={{
-            fontSize: 5,
+            fontSize: 6,
             fontWeight: 700,
             fontFamily: 'Rawline',
             fill: '#6d6d6d',
@@ -385,6 +409,7 @@ const PolicyModel = props => {
         <VictoryAxis
           dependentAxis
           tickFormat={tick => (tick >= 1000 ? tick / 1000 + 'K' : tick)}
+          offsetX={35}
           style={{
             grid: {
               stroke: '#aaaaaa',
@@ -396,7 +421,7 @@ const PolicyModel = props => {
               fill: '#6d6d6d',
               fontFamily: 'Rawline',
               fontWeight: '500',
-              fontSize: 5,
+              fontSize: 6,
             },
           }}
         />
@@ -406,7 +431,7 @@ const PolicyModel = props => {
             tickLabels: {
               fontFamily: 'Rawline',
               fontWeight: '500',
-              fontSize: '5',
+              fontSize: 7,
               fill: '#6d6d6d',
             },
           }}

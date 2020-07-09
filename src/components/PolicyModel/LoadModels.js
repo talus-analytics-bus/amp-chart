@@ -7,17 +7,17 @@ import axios from 'axios'
 
 // oldest acceptable model in the cache
 // (younger models will be used older will be deleted)
-const LIFESPAN = 60 * 60 * 1000
+const LIFESPAN = 3 * 60 * 60 * 1000
 
 // If the model versions do not match, drop the entire
 // localStorage. This lets us clear all client caching
 // if we push an incompatible update.
 const MODEL_VERSION = '1'
 
-const API_URL = 'http://192.168.1.33:8000/'
+// const API_URL = 'http://192.168.1.33:8000/'
 // const API_URL = 'http://localhost:8000/'
 // const API_URL = 'http://127.0.0.0:8000/'
-// const API_URL = 'http://amp-model-api.covidamp.org/'
+const API_URL = 'http://amp-model-api.covidamp.org/'
 
 // request a model from the server
 // this should only happen if we

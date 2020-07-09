@@ -50,14 +50,14 @@ const states = [
   { name: 'West Virginia', abbr: 'WV' },
   { name: 'Wisconsin', abbr: 'WI' },
   { name: 'Wyoming', abbr: 'WY' },
-  { name: 'American Samoa', abbr: 'AS' },
-  { name: 'Guam', abbr: 'GU' },
-  { name: 'Marshall Islands', abbr: 'MH' },
-  { name: 'Micronesia', abbr: 'FM' },
-  { name: 'Northern Marianas', abbr: 'MP' },
-  { name: 'Palau', abbr: 'PW' },
-  { name: 'Puerto Rico', abbr: 'PR' },
-  { name: 'Virgin Islands', abbr: 'VI' },
-];
+  // { name: 'American Samoa', abbr: 'AS' },
+  // { name: 'Guam', abbr: 'GU' },
+  // { name: 'Marshall Islands', abbr: 'MH' },
+  // { name: 'Micronesia', abbr: 'FM' },
+  // { name: 'Northern Marianas', abbr: 'MP' },
+  // { name: 'Palau', abbr: 'PW' },
+  // { name: 'Puerto Rico', abbr: 'PR' },
+  // { name: 'Virgin Islands', abbr: 'VI' },
+]
 
-export default states;
+export default states

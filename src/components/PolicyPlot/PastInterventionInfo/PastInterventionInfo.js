@@ -7,14 +7,20 @@ const PastInterventionInfo = props => {
   props = { ...props.pastInterventionProps }
 
   const width = 300
-  const arrowOffset = { x: 32, y: 28 }
+  // const arrowOffset = { x: 32, y: 28 }
+  const arrowOffset = { x1: 8, x2: 19, y: 47 }
+  const circleOffset = {
+    x: (window.innerWidth * 0.0107) / 1.5,
+    y: window.innerWidth * 0.0107,
+  }
+  // const circleOffset = 0
 
   const xPos =
     props.x < window.innerWidth / 2
-      ? props.x + arrowOffset.x
-      : props.x - width - 6
+      ? props.x + arrowOffset.x1 + circleOffset.x * 2
+      : props.x - arrowOffset.x2 - width + circleOffset.x
 
-  const yPos = props.y - arrowOffset.y
+  const yPos = props.y - arrowOffset.y + circleOffset.y
 
   const popupStyleName =
     props.x < window.innerWidth / 2 ? styles.leftPopup : styles.rightPopup
