@@ -308,7 +308,7 @@ const PolicyModel = props => {
       </VictoryChart>
       <VictoryChart
         // animate={{ duration: 1000 }}
-        padding={{ top: 5, bottom: 17, left: 30, right: 10 }}
+        padding={{ top: 8, bottom: 17, left: 30, right: 10 }}
         domainPadding={10}
         responsive={true}
         width={500}
