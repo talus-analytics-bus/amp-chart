@@ -25,16 +25,7 @@ const State = props => {
             onChange={e => {
               const newSelectedStates = [...props.selectedStates]
               newSelectedStates[props.index] = e.target.value
-              console.log(newSelectedStates)
-              // console.log(props.selectedStates.indexOf(props.selectedState))
               props.setSelectedStates(newSelectedStates)
-              // props.setSelectedStates(
-              //   props.selectedStates.splice(
-              //     props.selectedStates.indexOf(props.selectedState),
-              //     1,
-              //     e.target.value
-              //   )
-              // )
             }}
             aria-label={'Select a state to display'}
           >
@@ -44,6 +35,25 @@ const State = props => {
               </option>
             ))}
           </select>
+          <button
+            disabled={props.selectedStates.length < 2}
+            onClick={e => {
+              e.preventDefault()
+              const newSelectedStates = [...props.selectedStates]
+              newSelectedStates.splice(props.index, 1)
+              props.setSelectedStates(newSelectedStates)
+            }}
+          >
+            Remove State
+          </button>
+          <button
+            onClick={e => {
+              e.preventDefault()
+              props.resetState(props.selectedState)
+            }}
+          >
+            Reset State
+          </button>
           {/* <h1> */}
           {/*   {states.find(state => state.abbr === props.selectedState).name} */}
           {/* </h1> */}

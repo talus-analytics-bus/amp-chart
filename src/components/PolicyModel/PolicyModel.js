@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import loadModels, { requestIntervention } from './LoadModels'
+import loadModels, { requestIntervention, clearState } from './LoadModels'
 import parseModels from './parseModels'
 
 // import PolicyPlot from '../PolicyPlot/PolicyPlot';
@@ -98,6 +98,14 @@ const PolicyModel = () => {
     delete newCurves[state]
     setCurves(newCurves)
     requestIntervention(state, intervention).then(() => setup())
+  }
+
+  const resetState = state => {
+    const newCurves = Object.assign({}, curves)
+    delete newCurves[state]
+    setCurves(newCurves)
+
+    clearState(state).then(() => setup())
   }
 
   React.useEffect(() => {
@@ -202,6 +210,7 @@ const PolicyModel = () => {
                   activeTab={activeTab}
                   counterfactualSelected={counterfactualSelected}
                   setCounterfactualSelected={setCounterfactualSelected}
+                  resetState={resetState}
                 />
               )
             } else {

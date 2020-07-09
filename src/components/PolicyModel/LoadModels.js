@@ -35,43 +35,60 @@ const requestModel = async state => {
   return runData
 }
 
+const reconstructInterventions = (model, runData) => {
+  const newIntervention = runData.interventions.slice(-1)[0]
+  runData['dateRequested'] = new Date(model.dateRequested)
+  runData['cases'] = model.cases
+  runData['deaths'] = model.deaths
+
+  // check if model interventions include the latest,
+  // if not, copy the array from the old cached model
+  // and then add the latest intervention from the new one
+  if (
+    !model.interventions.find(
+      inter => inter.startdate === newIntervention.startdate
+    )
+  ) {
+    runData['interventions'] = [...model.interventions, newIntervention]
+  }
+  return runData
+}
+
 export const requestIntervention = async (state, intervention) => {
   let model = (await loadModels([state]))[0]
 
-  console.log(intervention)
-
   await axios
     .post(API_URL + 'intervention_run/' + model.modelrun, intervention)
+    .then(result => {
+      const runData = parseModelDates(result.data)
+      const newModel = reconstructInterventions(model, runData)
+
+      // save new model
+      console.log('ModelCache: added intervention to ' + state)
+      saveModel(newModel)
+    })
     .catch(async err => {
+      console.log('ModelCache: no worker found')
       // if the server returns an error,
       // delete the base model and then
       // request a new base model.
       deleteModel(model)
-      model = await loadModels([state])
-    })
-    .then(result => {
-      const runData = parseModelDates(result.data)
-      const newIntervention = runData.interventions.slice(-1)[0]
-      runData['dateRequested'] = new Date(model.dateRequested)
-      runData['cases'] = model.cases
-      runData['deaths'] = model.deaths
 
-      // check if model interventions include the latest,
-      // if not, copy the array from the old cached model
-      // and then add the latest intervention from the new one
-      if (
-        !model.interventions.find(
-          inter => inter.startdate === newIntervention.startdate
+      const newBaseModel = (await loadModels([state]))[0]
+
+      await axios
+        .post(
+          API_URL + 'intervention_run/' + newBaseModel.modelrun,
+          intervention
         )
-      ) {
-        runData['interventions'] = [...model.interventions, newIntervention]
-      }
+        .then(result => {
+          const runData = parseModelDates(result.data)
+          const newModel = reconstructInterventions(newBaseModel, runData)
 
-      // save new model
-      console.log('ModelCache: saving ' + state + ' model with intervention')
-      saveModel(runData)
-
-      // console.log(runData)
+          // save new model
+          console.log('ModelCache: added intervention to ' + state)
+          saveModel(newModel)
+        })
     })
 }
 
@@ -118,6 +135,30 @@ const deleteModel = model => {
   localStorage.removeItem(modelName)
 }
 
+export const clearState = async state =>
+  // one-liner naieve solution
+  //   deleteModel((await loadModels([state]))[0])
+  // Better clearState function, clears locally
+  {
+    const model = (await loadModels([state]))[0]
+    const resetModel = Object.assign({}, model)
+    resetModel.interventions = model.interventions.filter(
+      inter => new Date(inter.startdate) < new Date()
+    )
+    const counterfactualName = resetModel.interventions[0].system_name
+    const interventionName = resetModel.interventions.slice(-1)[0].system_name
+
+    resetModel.results = model.results.filter(run =>
+      [counterfactualName, interventionName].includes(run.name)
+    )
+
+    // disconnecting from the server worker
+    resetModel.modelrun = ''
+
+    resetModel.dateRequested = new Date(model.dateRequested)
+    saveModel(resetModel)
+  }
+
 // check if there is a sufficiently recent model run to use
 // if not, request a model from the server.
 export const loadModels = async states => {
@@ -147,16 +188,14 @@ export const loadModels = async states => {
           console.log(
             'ModelCache: deleting ' + modelName + ' from localStorage'
           )
-          window.localStorage.removeItem(modelName)
+          localStorage.removeItem(modelName)
           return false
         }
       })
 
       if (modelName) {
-        console.log(
-          'ModelCache: retrieving ' + modelName + ' from localStorage'
-        )
-        const modelString = window.localStorage.getItem(modelName)
+        console.log('ModelCache: retrieving ' + modelName)
+        const modelString = localStorage.getItem(modelName)
         return parseModelDates(JSON.parse(modelString))
       } else {
         return requestModel(state)

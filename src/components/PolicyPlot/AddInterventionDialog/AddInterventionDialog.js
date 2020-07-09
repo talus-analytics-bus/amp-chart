@@ -122,8 +122,6 @@ const PastInterventionInfo = props => {
               <button
                 onClick={e => {
                   e.preventDefault()
-                  console.log(policyNames[rVal])
-                  console.log(rVal)
                   const startDate =
                     interDate === ''
                       ? new Date(props.position.date)
@@ -140,7 +138,6 @@ const PastInterventionInfo = props => {
                     params: { beta_mild: rVal, beta_asymp: rVal },
                     intervention_type: 'intervention',
                   }
-                  console.log(intervention)
                   props.addIntervention(props.selectedState, intervention)
                 }}
               >
