@@ -115,7 +115,7 @@ const PolicyModel = () => {
   return (
     <div className={styles.background}>
       <article className={styles.main}>
-        <h1 className={styles.title}>Social distancing model</h1>
+        <h1 className={styles.title}>Social distancing policy model</h1>
         <div className={styles.tabrow}>
           {/* <button */}
           {/*   onClick={() => setActiveTab('existing')} */}
@@ -136,7 +136,12 @@ const PolicyModel = () => {
           {/* > */}
           {/*   Evaluate policy interventions */}
           {/* </button> */}
-          <div className={styles.location}>
+          {/* <div className={styles.location}> */}
+          {/*    */}
+          {/* </div> */}
+        </div>
+        <section className={styles.tabarea}>
+          <div className={styles.settingsBar}>
             <label>
               Add a state to compare
               <select
@@ -153,10 +158,6 @@ const PolicyModel = () => {
                 ))}
               </select>
             </label>
-          </div>
-        </div>
-        <section className={styles.tabarea}>
-          <div className={styles.settingsBar}>
             <label>
               Show reduction in contacts by
               <select>

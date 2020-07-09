@@ -1,6 +1,7 @@
 import React from 'react'
 
 import styles from './PastInterventionInfo.module.scss'
+import states from '../../PolicyModel/states.js'
 
 const PastInterventionInfo = props => {
   const setState = props.setPastInterventionProps
@@ -26,6 +27,23 @@ const PastInterventionInfo = props => {
     props.x < window.innerWidth / 2 ? styles.leftPopup : styles.rightPopup
 
   const proposed = new Date(props.effectiveDate) > new Date()
+
+  let policyURL = ''
+  if (props.state !== undefined) {
+    const stateFullName = states.find(state => state.abbr === props.state).name
+
+    policyURL =
+      `https://covidamp.org/data?filters=` +
+      `{%22primary_ph_measure%22:[%22Social%20distancing%22],` +
+      `%22dates_in_effect%22:[%22${props.effectiveDate}%22,` +
+      `%22${props.effectiveDate}%22],` +
+      `%22country_name%22:[%22United%20States%20of%20America%20(USA)%22],` +
+      `%22area1%22:[%22${stateFullName}%22]}`
+
+    // alert(policyURL)
+    console.log(props.state)
+    console.log(policyURL)
+  }
 
   return (
     <section
@@ -60,7 +78,7 @@ const PastInterventionInfo = props => {
           {proposed ? 'Proposal Date: ' : 'Effective Date: '}
           {props.effectiveDate}
         </p>
-        {!proposed && <a href="https://covidamp.org/data">view policy</a>}
+        {!proposed && <a href={policyURL}>view policy</a>}
       </div>
     </section>
   )

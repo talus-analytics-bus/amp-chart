@@ -184,6 +184,7 @@ const PolicyModel = props => {
           eventHandlers: {
             onMouseEnter: (event, eventKey) => {
               setPastInterventionProps({
+                state: props.selectedState,
                 policyName: intervention.name.split('_')[0],
                 effectiveDate: intervention.intervention_start_date,
                 x:
