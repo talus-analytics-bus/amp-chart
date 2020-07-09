@@ -9,11 +9,13 @@ import {
   VictoryLabel,
   createContainer,
   LineSegment,
+  VictoryPortal,
 } from 'victory'
 
 import AddInterventionCursor from './AddInterventionCursor/AddInterventionCursor'
 import PastInterventionInfo from './PastInterventionInfo/PastInterventionInfo'
 import AddInterventionDialog from './AddInterventionDialog/AddInterventionDialog'
+import TodayLabel from './TodayLabel/TodayLabel'
 
 import styles from './PolicyPlot.module.scss'
 
@@ -185,7 +187,7 @@ const PolicyModel = props => {
       data={[
         {
           x: Date.parse(intervention.intervention_start_date),
-          y: props.caseLoadAxis[1] * 0.8,
+          y: props.caseLoadAxis[1],
           label: intervention.name,
         },
       ]}
@@ -222,9 +224,8 @@ const PolicyModel = props => {
       {/*     /> */}
       {/*   </linearGradient> */}
       {/* </svg> */}
-      <h1>Effective R</h1>
       <VictoryChart
-        padding={{ top: 2, bottom: 0, left: 30, right: 10 }}
+        padding={{ top: 5, bottom: 0, left: 30, right: 10 }}
         domainPadding={5}
         responsive={true}
         width={500}
@@ -248,18 +249,29 @@ const PolicyModel = props => {
           />
         }
       >
+        <VictoryLabel
+          text="R Effective"
+          x={4.5}
+          y={4}
+          style={{
+            fontSize: 5,
+            fontWeight: 700,
+            fontFamily: 'Rawline',
+            fill: '#6d6d6d',
+          }}
+        />
         <VictoryAxis
           dependentAxis
           // tickFormat={(tick) => tick / 1000 + 'K'}
           style={{
             grid: {
               stroke: '#aaaaaa',
-              strokeWidth: 2,
+              strokeWidth: 0,
             },
             axis: { stroke: '#fff', strokeWidth: 0 },
             ticks: { strokeWidth: 0 },
             tickLabels: {
-              fill: '#aaa',
+              fill: '#6d6d6d',
               fontFamily: 'Rawline',
               fontWeight: '500',
               fontSize: 5,
@@ -271,25 +283,32 @@ const PolicyModel = props => {
             data: { stroke: 'grey', strokeWidth: 0.5, fill: '#3F9385' },
           }}
           data={props.data.curves['R effective'].actuals}
+          interpolation={'stepAfter'}
         />
         <VictoryArea
           style={{
             data: { stroke: 'grey', strokeWidth: 0.5, fill: '#C9E0DC' },
           }}
           data={props.data.curves['R effective'].model}
+          interpolation={'stepAfter'}
         />
         <VictoryLine
-          style={{ data: { stroke: 'skyblue', strokeWidth: 1 } }}
+          labelComponent={
+            <VictoryPortal>
+              <TodayLabel />
+            </VictoryPortal>
+          }
+          labels={[`TODAY`]}
+          style={{ data: { stroke: '#7FC6FA', strokeWidth: 1.5 } }}
           data={[
             { x: new Date(), y: 0 },
             { x: new Date(), y: 3 },
           ]}
         />
       </VictoryChart>
-      <h1>CASELOAD</h1>
       <VictoryChart
         // animate={{ duration: 1000 }}
-        padding={{ top: 0, bottom: 17, left: 30, right: 10 }}
+        padding={{ top: 5, bottom: 17, left: 30, right: 10 }}
         domainPadding={10}
         responsive={true}
         width={500}
@@ -352,18 +371,29 @@ const PolicyModel = props => {
           />
         }
       >
+        <VictoryLabel
+          text="CASELOAD"
+          x={4.5}
+          y={6}
+          style={{
+            fontSize: 5,
+            fontWeight: 700,
+            fontFamily: 'Rawline',
+            fill: '#6d6d6d',
+          }}
+        />
         <VictoryAxis
           dependentAxis
-          tickFormat={tick => tick / 1000 + 'K'}
+          tickFormat={tick => (tick >= 1000 ? tick / 1000 + 'K' : tick)}
           style={{
             grid: {
               stroke: '#aaaaaa',
-              strokeWidth: 2,
+              strokeWidth: 1,
             },
             axis: { stroke: '#fff', strokeWidth: 0 },
             ticks: { strokeWidth: 0 },
             tickLabels: {
-              fill: '#aaa',
+              fill: '#6d6d6d',
               fontFamily: 'Rawline',
               fontWeight: '500',
               fontSize: 5,
@@ -377,12 +407,13 @@ const PolicyModel = props => {
               fontFamily: 'Rawline',
               fontWeight: '500',
               fontSize: '5',
+              fill: '#6d6d6d',
             },
           }}
         />
         {/* Today marker */}
         <VictoryLine
-          style={{ data: { stroke: 'skyblue', strokeWidth: 1 } }}
+          style={{ data: { stroke: '#7FC6FA', strokeWidth: 1.5 } }}
           data={[
             { x: new Date(), y: 0 },
             { x: new Date(), y: props.caseLoadAxis[1] },

@@ -120,6 +120,21 @@ export default function parseModelCurves(
           // rendering performance, especially with multiple plots
           if (source === 'model') {
             if (
+              (column === 'R effective') &
+              (trimmedData[index - 1].source === 'actuals')
+            ) {
+              curves[state].curves[column][source].push({
+                x: day.date.setDate(day.date.getDate() - 1),
+                y: value,
+              })
+              counterfactualSelected &&
+                counterfactualRun[index] &&
+                curves[state].curves['CF_' + column]['model'].push({
+                  x: day.date.setDate(day.date.getDate() - 1),
+                  y: counterfactualRun[index][column],
+                })
+            }
+            if (
               index % 5 === 0 ||
               trimmedData[index - 1].source === 'actuals'
             ) {
@@ -129,7 +144,6 @@ export default function parseModelCurves(
               })
               counterfactualSelected &&
                 counterfactualRun[index] &&
-                // column === 'none' &&
                 curves[state].curves['CF_' + column]['model'].push({
                   x: day.date,
                   y: counterfactualRun[index][column],

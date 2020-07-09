@@ -64,8 +64,8 @@ const NavigatorPlot = props => {
       <VictoryChart
         className={styles.navigator}
         // style={{ height: props.proportion * 100 + '%' }}
-        width={800}
-        height={80}
+        width={500}
+        height={60}
         // height={(window.innerHeight / window.innerWidth) * 500 * props.proportion}
         padding={{ top: 0, bottom: 25, left: 0, right: 0 }}
         domainPadding={10}
@@ -96,7 +96,8 @@ const NavigatorPlot = props => {
             tickLabels: {
               fontFamily: 'Rawline',
               fontWeight: '500',
-              fontSize: '8',
+              fontSize: '5',
+              fill: '#6d6d6d',
             },
           }}
         />

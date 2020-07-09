@@ -42,6 +42,32 @@
         border-radius: 0.25em;
       }
 
+      .removeState,
+      .resetState {
+        background: none;
+        border: none;
+        color: white;
+        background-color: #697681;
+        border: 1px solid #3b4d5c;
+        border-radius: 0.25em;
+        padding: 0.25em 0.5em;
+        margin-top: 0.5em;
+
+        &:disabled {
+          opacity: 0.5;
+        }
+      }
+
+      // .removeState {
+      //   background-color: #815252;
+      //   border: 1px solid #6a4344;
+      // }
+
+      // .resetState {
+      //   background-color: #816952;
+      //   border: 1px solid #6a5743;
+      // }
+
       // h1,
       // h2 {
       //   margin: 0;

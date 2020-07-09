@@ -115,7 +115,7 @@ const PolicyModel = () => {
   return (
     <div className={styles.background}>
       <article className={styles.main}>
-        <h1 className={styles.title}>Social distancing model (info button)</h1>
+        <h1 className={styles.title}>Social distancing model</h1>
         <div className={styles.tabrow}>
           {/* <button */}
           {/*   onClick={() => setActiveTab('existing')} */}
@@ -160,7 +160,7 @@ const PolicyModel = () => {
             <label>
               Show reduction in contacts by
               <select>
-                <option value="percent">Percent reduction</option>
+                <option value="R effective">Effective R Value</option>
               </select>
             </label>
             <label>

@@ -36,6 +36,7 @@ const State = props => {
             ))}
           </select>
           <button
+            className={styles.removeState}
             disabled={props.selectedStates.length < 2}
             onClick={e => {
               e.preventDefault()
@@ -47,6 +48,7 @@ const State = props => {
             Remove State
           </button>
           <button
+            className={styles.resetState}
             onClick={e => {
               e.preventDefault()
               props.resetState(props.selectedState)
@@ -80,7 +82,7 @@ const State = props => {
                   props.setCounterfactualSelected(!props.counterfactualSelected)
                 }
               />
-              COVID COUNT WITH NO ACTIONS TAKEN
+              COVID count with NO actions taken
             </label>
             <div>
               <h4>[API]</h4>

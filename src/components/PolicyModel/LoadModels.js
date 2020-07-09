@@ -14,10 +14,10 @@ const LIFESPAN = 60 * 60 * 1000
 // if we push an incompatible update.
 const MODEL_VERSION = '1'
 
-const API_URL = 'http://192.168.1.33:8000/'
-// const API_URL = 'http://ec2-13-58-161-197.us-east-2.compute.amazonaws.com:8080/'
+// const API_URL = 'http://192.168.1.33:8000/'
 // const API_URL = 'http://localhost:8000/'
 // const API_URL = 'http://127.0.0.0:8000/'
+const API_URL = 'http://amp-model-api.covidamp.org/'
 
 // request a model from the server
 // this should only happen if we
@@ -135,6 +135,7 @@ const deleteModel = model => {
   localStorage.removeItem(modelName)
 }
 
+// function to strip out user-added interventions
 export const clearState = async state =>
   // one-liner naieve solution
   //   deleteModel((await loadModels([state]))[0])
@@ -203,6 +204,7 @@ export const loadModels = async states => {
     })
   )
 
+  console.log(models)
   return models
 }
 // setTimeout(() => {
