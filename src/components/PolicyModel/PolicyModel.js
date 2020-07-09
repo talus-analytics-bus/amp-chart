@@ -40,14 +40,7 @@ const PolicyModel = () => {
   ])
   const [caseLoadAxis, setCaseLoadAxis] = useState([0, 10000])
 
-  const addIntervention = (state, intervention) => {
-    const newCurves = Object.assign({}, curves)
-    delete newCurves[state]
-    setCurves(newCurves)
-    requestIntervention(state, intervention).then(() => setup())
-  }
-
-  const setup = async () => {
+  const setup = React.useCallback(async () => {
     const loadedModels = await loadModels(selectedStates)
 
     // get curves, max, min from models
@@ -81,11 +74,26 @@ const PolicyModel = () => {
       0,
       Math.max(...Object.values(modelCurves).map(state => state.yMax)),
     ])
+  }, [
+    selectedStates,
+    selectedCurves,
+    counterfactualSelected,
+    setCurves,
+    setZoomDateRange,
+    setDomain,
+    setCaseLoadAxis,
+  ])
+
+  const addIntervention = (state, intervention) => {
+    const newCurves = Object.assign({}, curves)
+    delete newCurves[state]
+    setCurves(newCurves)
+    requestIntervention(state, intervention).then(() => setup())
   }
 
   React.useEffect(() => {
     setup()
-  }, [selectedStates, selectedCurves, counterfactualSelected])
+  }, [selectedStates, selectedCurves, counterfactualSelected, setup])
 
   return (
     <div className={styles.background}>

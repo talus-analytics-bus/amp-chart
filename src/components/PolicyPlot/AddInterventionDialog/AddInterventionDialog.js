@@ -18,7 +18,7 @@ const PastInterventionInfo = props => {
       ? styles.leftPopup
       : styles.rightPopup
 
-  const [rVal, setRVal] = React.useState(75)
+  const [rVal, setRVal] = React.useState(0.15)
   const [interDate, setInterDate] = React.useState(props.position.date)
 
   return (
@@ -65,9 +65,9 @@ const PastInterventionInfo = props => {
                 <input
                   type="radio"
                   name="phase"
-                  value="12.5"
-                  checked={rVal <= 25}
-                  onChange={e => setRVal(e.target.value)}
+                  value="0.1"
+                  checked={rVal === 0.1}
+                  onChange={e => setRVal(Number(e.target.value))}
                 />
                 Lockdown
               </label>
@@ -75,9 +75,9 @@ const PastInterventionInfo = props => {
                 <input
                   type="radio"
                   name="phase"
-                  value="37.5"
-                  checked={(rVal > 25) & (rVal <= 50)}
-                  onChange={e => setRVal(e.target.value)}
+                  value="0.15"
+                  checked={rVal === 0.15}
+                  onChange={e => setRVal(Number(e.target.value))}
                 />
                 Stay at home
               </label>
@@ -85,9 +85,9 @@ const PastInterventionInfo = props => {
                 <input
                   type="radio"
                   name="phase"
-                  value="62.5"
-                  checked={(rVal > 50) & (rVal <= 75)}
-                  onChange={e => setRVal(e.target.value)}
+                  value="0.25"
+                  checked={rVal === 0.25}
+                  onChange={e => setRVal(Number(e.target.value))}
                 />
                 Safer at home
               </label>
@@ -95,9 +95,9 @@ const PastInterventionInfo = props => {
                 <input
                   type="radio"
                   name="phase"
-                  value="87.5"
-                  checked={rVal > 75}
-                  onChange={e => setRVal(e.target.value)}
+                  value="0.35"
+                  checked={rVal === 0.35}
+                  onChange={e => setRVal(Number(e.target.value))}
                 />
                 New normal
               </label>
@@ -125,7 +125,7 @@ const PastInterventionInfo = props => {
                             .toISOString()
                             .substr(0, 10)
                         : interDate.toISOString(),
-                    params: { beta_mild: 0.0, beta_asymp: 0.0 },
+                    params: { beta_mild: rVal, beta_asymp: rVal },
                     intervention_type: 'intervention',
                   }
                   props.addIntervention(props.selectedState, intervention)
